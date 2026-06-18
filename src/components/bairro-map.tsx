@@ -41,19 +41,27 @@ function MapViewport({ selectedFeature }: { selectedFeature: BairroFeature | nul
 
 export default function BairroMap({
   selectedFeature,
+  variant = "light",
 }: {
   selectedFeature: BairroFeature | null;
+  variant?: "light" | "dark";
 }) {
+  const isDark = variant === "dark";
+
   return (
     <MapContainer
       center={defaultCenter}
       zoom={12}
       scrollWheelZoom={false}
-      className="map-low-color h-full min-h-[420px] w-full"
+      className={`h-full min-h-[420px] w-full ${isDark ? "map-dark-color" : "map-low-color"}`}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        url={
+          isDark
+            ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        }
       />
       <MapViewport selectedFeature={selectedFeature} />
       {saoLuisBairrosGeoJson.features.map((feature) => {
@@ -66,10 +74,10 @@ export default function BairroMap({
             center={[lat, lng]}
             radius={feature.properties.radiusKm * 1000}
             pathOptions={{
-              color: isSelected ? "#0f766e" : "#94a3b8",
-              fillColor: isSelected ? "#14b8a6" : "#cbd5e1",
-              fillOpacity: isSelected ? 0.24 : 0.08,
-              opacity: isSelected ? 0.9 : 0.45,
+              color: isSelected ? (isDark ? "#67e8f9" : "#0f766e") : isDark ? "#334155" : "#94a3b8",
+              fillColor: isSelected ? (isDark ? "#22d3ee" : "#14b8a6") : isDark ? "#1e293b" : "#cbd5e1",
+              fillOpacity: isSelected ? 0.28 : isDark ? 0.12 : 0.08,
+              opacity: isSelected ? 0.95 : isDark ? 0.5 : 0.45,
               weight: isSelected ? 3 : 0,
               stroke: isSelected,
             }}

@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050914;
+  --foreground: #f8fafc;
+  --brand-blue: #0094ff;
+  --brand-orange: #ff791f;
+  --brand-cyan: #67e8f9;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: "Trebuchet MS", "Aptos", "Segoe UI", sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
@@ -22,7 +25,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Trebuchet MS", "Aptos", "Segoe UI", sans-serif;
 }
 
 .map-low-color .leaflet-tile {
@@ -36,4 +39,14 @@ body {
 html,
 body {
   min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: var(--brand-orange);
+  color: #120804;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
 }

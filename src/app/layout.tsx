@@ -3,8 +3,9 @@ import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Contato por Bairro | Sao Luis",
-  description: "Formulario de contato com selecao de bairros e mapa em Sao Luis do Maranhao.",
+  title: "ST1 Internet Fibra | Consulte cobertura com o Starzinho",
+  description:
+    "Consulte se a rota de internet fibra da ST1 chega na sua rua e conheca planos residenciais de 1000MB e 1300MB.",
 };
 
 export default function RootLayout({
