@@ -20,10 +20,29 @@ L.Icon.Default.mergeOptions({
   shadowUrl: leafletMarkerShadow,
 });
 
-function MapViewport({ selectedFeature }: { selectedFeature: BairroFeature | null }) {
+export type AddressMarker = {
+  lat: number;
+  lng: number;
+  label: string;
+};
+
+function MapViewport({
+  selectedFeature,
+  addressMarker,
+}: {
+  selectedFeature: BairroFeature | null;
+  addressMarker?: AddressMarker | null;
+}) {
   const map = useMap();
 
   useEffect(() => {
+    if (addressMarker) {
+      map.setView([addressMarker.lat, addressMarker.lng], 17, {
+        animate: true,
+      });
+      return;
+    }
+
     if (!selectedFeature) {
       map.setView(defaultCenter, 12);
       return;
@@ -34,16 +53,18 @@ function MapViewport({ selectedFeature }: { selectedFeature: BairroFeature | nul
     map.fitBounds(L.latLng(lat, lng).toBounds(radiusMeters * 2.8), {
       maxZoom: 14,
     });
-  }, [map, selectedFeature]);
+  }, [addressMarker, map, selectedFeature]);
 
   return null;
 }
 
 export default function BairroMap({
   selectedFeature,
+  addressMarker,
   variant = "light",
 }: {
   selectedFeature: BairroFeature | null;
+  addressMarker?: AddressMarker | null;
   variant?: "light" | "dark";
 }) {
   const isDark = variant === "dark";
@@ -63,7 +84,7 @@ export default function BairroMap({
             : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         }
       />
-      <MapViewport selectedFeature={selectedFeature} />
+      <MapViewport selectedFeature={selectedFeature} addressMarker={addressMarker} />
       {saoLuisBairrosGeoJson.features.map((feature) => {
         const [lng, lat] = feature.properties.centroid;
         const isSelected = feature.properties.id === selectedFeature?.properties.id;
@@ -99,6 +120,15 @@ export default function BairroMap({
             <strong>{selectedFeature.properties.name}</strong>
             <br />
             {selectedFeature.properties.zone}
+          </Popup>
+        </Marker>
+      ) : null}
+      {addressMarker ? (
+        <Marker position={[addressMarker.lat, addressMarker.lng]}>
+          <Popup>
+            <strong>Endereço selecionado</strong>
+            <br />
+            {addressMarker.label}
           </Popup>
         </Marker>
       ) : null}

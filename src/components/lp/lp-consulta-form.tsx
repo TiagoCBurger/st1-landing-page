@@ -3,19 +3,31 @@
 import { FormEvent, useState } from "react";
 
 import { coverageBairros } from "@/components/lp/lp-data";
+import type { AddressMarker } from "@/components/bairro-map";
 
 type QuizStep = "address" | "contact" | "complete";
 
 type LeadPayload = {
   bairro: string;
   rua: string;
+  endereco: string;
+  lat: number;
+  lng: number;
   nome: string;
   email: string;
+};
+
+type AddressResult = {
+  place_id: number;
+  display_name: string;
+  lat: string;
+  lon: string;
 };
 
 type LpConsultaFormProps = {
   selectedBairroId?: string;
   onBairroChange?: (bairroId: string) => void;
+  onAddressSelect?: (address: AddressMarker | null) => void;
   onComplete?: (lead: LeadPayload) => void;
   className?: string;
 };
@@ -23,6 +35,7 @@ type LpConsultaFormProps = {
 export default function LpConsultaForm({
   selectedBairroId,
   onBairroChange,
+  onAddressSelect,
   onComplete,
   className = "",
 }: LpConsultaFormProps) {
@@ -31,21 +44,86 @@ export default function LpConsultaForm({
   const selectedBairro = coverageBairros.find((bairro) => bairro.id === bairroValue);
 
   const [step, setStep] = useState<QuizStep>("address");
-  const [rua, setRua] = useState("");
+  const [addressQuery, setAddressQuery] = useState("");
+  const [addressResults, setAddressResults] = useState<AddressResult[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<AddressMarker | null>(null);
+  const [addressStatus, setAddressStatus] = useState("");
+  const [isSearchingAddress, setIsSearchingAddress] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+
+  async function searchAddress() {
+    const query = addressQuery.trim();
+
+    if (query.length < 4) {
+      setAddressStatus("Digite pelo menos 4 caracteres para buscar o endereço.");
+      return;
+    }
+
+    setIsSearchingAddress(true);
+    setAddressStatus("");
+    setAddressResults([]);
+    setSelectedAddress(null);
+    onAddressSelect?.(null);
+
+    try {
+      const params = new URLSearchParams({ q: query });
+      const response = await fetch(`/api/geocode?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error("Address search failed");
+      }
+
+      const payload = (await response.json()) as { results: AddressResult[] };
+      const results = payload.results;
+
+      if (results.length === 0) {
+        setAddressStatus("Não encontrei esse endereço. Tente incluir número, bairro ou uma rua próxima.");
+        return;
+      }
+
+      setAddressResults(results);
+      setAddressStatus("Selecione o endereço exato encontrado para marcar no mapa.");
+    } catch {
+      setAddressStatus("Não consegui buscar o endereço agora. Tente novamente em instantes.");
+    } finally {
+      setIsSearchingAddress(false);
+    }
+  }
+
+  function selectAddress(result: AddressResult) {
+    const address = {
+      lat: Number(result.lat),
+      lng: Number(result.lon),
+      label: result.display_name,
+    };
+
+    setSelectedAddress(address);
+    setAddressQuery(result.display_name);
+    setAddressResults([]);
+    setAddressStatus("Endereço marcado no mapa. Agora posso continuar a consulta.");
+    onAddressSelect?.(address);
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (step === "address") {
+      if (!selectedAddress) {
+        setAddressStatus("Escolha um endereço exato da lista antes de continuar.");
+        return;
+      }
+
       setStep("contact");
       return;
     }
 
     const lead = {
       bairro: selectedBairro?.name ?? bairroValue,
-      rua,
+      rua: addressQuery,
+      endereco: selectedAddress?.label ?? addressQuery,
+      lat: selectedAddress?.lat ?? 0,
+      lng: selectedAddress?.lng ?? 0,
       nome,
       email,
     };
@@ -79,7 +157,7 @@ export default function LpConsultaForm({
               Opa, encontrei uma possivel rota perto de voce.
             </p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Primeiro me diga seu bairro e rua. Eu uso isso para consultar se a rota da ST1 passa pelo seu endereco.
+              Busque seu endereço exato. Quando você selecionar um resultado, eu marco o ponto no mapa.
             </p>
           </>
         ) : null}
@@ -133,17 +211,49 @@ export default function LpConsultaForm({
               </select>
             </label>
 
-            <label className="block">
-              <span className="text-sm font-bold text-cyan-100">Rua</span>
-              <input
-                name="rua"
-                required
-                value={rua}
-                onChange={(event) => setRua(event.target.value)}
-                placeholder="Digite o nome da sua rua"
-                className="mt-2 w-full rounded-2xl border border-white/10 bg-[#071426] px-4 py-3 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
-              />
-            </label>
+            <div>
+              <label className="block">
+                <span className="text-sm font-bold text-cyan-100">Endereço exato</span>
+                <input
+                  name="endereco"
+                  required
+                  value={addressQuery}
+                  onChange={(event) => {
+                    setAddressQuery(event.target.value);
+                    setSelectedAddress(null);
+                    onAddressSelect?.(null);
+                  }}
+                  placeholder="Ex: Rua 10, Cohatrac, São Luís"
+                  className="mt-2 w-full rounded-2xl border border-white/10 bg-[#071426] px-4 py-3 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={searchAddress}
+                disabled={isSearchingAddress}
+                className="mt-3 w-full rounded-2xl border border-cyan-200/25 bg-cyan-300/10 px-5 py-3 text-sm font-black text-cyan-50 transition hover:bg-cyan-300 hover:text-[#04101f] disabled:cursor-wait disabled:opacity-70"
+              >
+                {isSearchingAddress ? "Buscando endereço..." : "Buscar endereço no mapa"}
+              </button>
+
+              {addressStatus ? <p className="mt-3 text-xs leading-5 text-cyan-100/80">{addressStatus}</p> : null}
+
+              {addressResults.length > 0 ? (
+                <div className="mt-3 max-h-52 space-y-2 overflow-auto rounded-2xl border border-white/10 bg-[#050914]/70 p-2">
+                  {addressResults.map((result) => (
+                    <button
+                      key={result.place_id}
+                      type="button"
+                      onClick={() => selectAddress(result)}
+                      className="w-full rounded-xl px-3 py-3 text-left text-sm leading-5 text-slate-200 transition hover:bg-cyan-300/10 hover:text-white"
+                    >
+                      {result.display_name}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
 
             <button
               type="submit"
@@ -159,7 +269,7 @@ export default function LpConsultaForm({
             <div className="rounded-2xl border border-cyan-200/15 bg-cyan-300/10 p-4">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">Endereco em consulta</p>
               <p className="mt-1 text-sm font-bold text-white">
-                {selectedBairro?.name ?? bairroValue} • {rua}
+                {selectedBairro?.name ?? bairroValue} • {selectedAddress?.label ?? addressQuery}
               </p>
             </div>
 
