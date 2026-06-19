@@ -87,7 +87,7 @@ export default function V1LandingPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#050914] text-white">
       <section className="relative isolate px-5 pb-20 pt-6 sm:px-8 lg:px-12">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.34),transparent_32%),radial-gradient(circle_at_83%_18%,rgba(255,114,26,0.28),transparent_30%),linear-gradient(135deg,#050914_0%,#07182c_50%,#080b12_100%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.34),transparent_32%),radial-gradient(circle_at_83%_18%,rgba(255,116,0,0.28),transparent_30%),linear-gradient(135deg,#050914_0%,#07182c_50%,#080b12_100%)]" />
         <div className="absolute left-1/2 top-24 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full border border-cyan-300/10 bg-cyan-300/5 blur-3xl" />
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
@@ -104,7 +104,7 @@ export default function V1LandingPage() {
           </a>
           <a
             href="#consulta"
-            className="rounded-full border border-orange-300/40 bg-orange-400 px-5 py-2.5 text-sm font-extrabold text-[#120804] shadow-[0_0_32px_rgba(255,121,31,0.35)] transition hover:-translate-y-0.5 hover:bg-orange-300"
+            className="rounded-full border border-[#ff7400]/45 bg-[#ff7400] px-5 py-2.5 text-sm font-extrabold text-[#120804] shadow-[0_0_32px_rgba(255,116,0,0.35)] transition hover:-translate-y-0.5 hover:bg-[#ff8a1f]"
           >
             Verificar minha rua
           </a>
@@ -113,17 +113,17 @@ export default function V1LandingPage() {
         <div id="topo" className="mx-auto grid max-w-7xl items-center gap-10 pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:pt-24">
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100">
-              <span className="size-2 rounded-full bg-orange-400 shadow-[0_0_18px_#ff8a1d]" />
+              <span className="size-2 rounded-full bg-[#ff7400] shadow-[0_0_18px_#ff7400]" />
               Rota de internet fibra com o Starzinho
             </div>
             <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
               Descubra se a fibra da ST1
-              <span className="block bg-gradient-to-r from-cyan-200 via-white to-orange-200 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-cyan-200 via-white to-[#ff7400] bg-clip-text text-transparent">
                 chega na sua rua.
               </span>
             </h1>
             <div className="mt-6 flex max-w-2xl items-start gap-3 text-left sm:items-center">
-              <div className="relative size-16 shrink-0 overflow-hidden rounded-full border-2 border-orange-300 bg-[#07111f] shadow-[0_0_28px_rgba(255,121,31,0.28)]">
+              <div className="relative size-16 shrink-0 overflow-hidden rounded-full border-2 border-[#ff7400] bg-[#07111f] shadow-[0_0_28px_rgba(255,116,0,0.28)]">
                 <Image
                   src="/starzinho.png"
                   alt="Starzinho"
@@ -145,7 +145,7 @@ export default function V1LandingPage() {
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {plans.map((plan) => (
                 <div key={plan.name} className="rounded-[2rem] border border-white/10 bg-white/[0.07] p-5 shadow-2xl backdrop-blur">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-200">{plan.label}</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ff7400]">{plan.label}</p>
                   <p className="mt-3 text-4xl font-black tracking-[-0.04em] text-white">{plan.name}</p>
                   <p className="mt-1 text-xl font-extrabold text-cyan-200">{plan.price}</p>
                   <p className="mt-3 text-sm leading-6 text-slate-300">{plan.description}</p>
@@ -155,12 +155,12 @@ export default function V1LandingPage() {
           </div>
 
           <div className="relative" id="consulta">
-            <div className="absolute -inset-7 rounded-[3rem] bg-gradient-to-br from-cyan-400/20 via-transparent to-orange-400/20 blur-2xl" />
+            <div className="absolute -inset-7 rounded-[3rem] bg-gradient-to-br from-cyan-400/20 via-transparent to-[#ff7400]/20 blur-2xl" />
             <div className="relative rounded-[2.5rem] border border-white/12 bg-[#07111f]/85 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur sm:p-6">
               <div className="relative mb-5 min-h-[250px] overflow-hidden rounded-[2rem] border border-cyan-200/10 bg-[radial-gradient(circle_at_50%_35%,rgba(0,148,255,0.28),transparent_42%),linear-gradient(160deg,rgba(255,255,255,0.10),rgba(255,255,255,0.02))]">
                 <div className="absolute inset-x-8 top-1/2 h-px bg-gradient-to-r from-transparent via-cyan-200 to-transparent" />
                 <div className="absolute left-[18%] top-[28%] size-3 rounded-full bg-cyan-200 shadow-[0_0_28px_#67e8f9]" />
-                <div className="absolute right-[18%] top-[62%] size-3 rounded-full bg-orange-300 shadow-[0_0_28px_#fdba74]" />
+                <div className="absolute right-[18%] top-[62%] size-3 rounded-full bg-[#ff7400] shadow-[0_0_28px_#ff7400]" />
                 <Image
                   src="/startzinho2.png"
                   alt="Starzinho, mascote da ST1, guiando a consulta de cobertura"
@@ -223,7 +223,7 @@ export default function V1LandingPage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-orange-300 px-5 py-4 text-base font-black text-[#130905] shadow-[0_0_34px_rgba(255,121,31,0.36)] transition hover:-translate-y-0.5 hover:shadow-[0_0_42px_rgba(255,121,31,0.5)]"
+                  className="w-full rounded-2xl bg-[#ff7400] px-5 py-4 text-base font-black text-[#130905] shadow-[0_0_34px_rgba(255,116,0,0.36)] transition hover:-translate-y-0.5 hover:shadow-[0_0_42px_rgba(255,116,0,0.5)]"
                 >
                   Verificar minha rua
                 </button>
@@ -236,7 +236,7 @@ export default function V1LandingPage() {
       <section className="relative px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-300">Chega de conexao instavel</p>
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Chega de conexao instavel</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
               Chega de internet travando no meio da sua rotina!
             </h2>
@@ -247,7 +247,7 @@ export default function V1LandingPage() {
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             {painPoints.map((item) => (
               <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30">
-                <span className="mb-5 block size-3 rounded-full bg-orange-300 shadow-[0_0_22px_#fb923c]" />
+                <span className="mb-5 block size-3 rounded-full bg-[#ff7400] shadow-[0_0_22px_#ff7400]" />
                 <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
               </div>
@@ -275,7 +275,7 @@ export default function V1LandingPage() {
               {plans.map((plan) => (
                 <article key={plan.name} className="relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-[#081629] p-6 shadow-2xl">
                   <div className="absolute -right-14 -top-14 size-40 rounded-full bg-cyan-300/10 blur-2xl" />
-                  <p className="text-sm font-black uppercase tracking-[0.22em] text-orange-300">{plan.label}</p>
+                  <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff7400]">{plan.label}</p>
                   <h3 className="mt-5 text-5xl font-black tracking-[-0.06em] text-white">{plan.name}</h3>
                   <p className="mt-2 text-2xl font-black text-cyan-200">{plan.price}</p>
                   <p className="mt-5 text-sm leading-6 text-slate-300">{plan.description}</p>
@@ -298,8 +298,8 @@ export default function V1LandingPage() {
       </section>
 
       <section className="px-5 py-20 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl rounded-[2.75rem] border border-white/10 bg-[linear-gradient(135deg,rgba(0,148,255,0.12),rgba(255,121,31,0.10))] p-6 sm:p-10">
-          <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-200">Consulta de cobertura</p>
+        <div className="mx-auto max-w-7xl rounded-[2.75rem] border border-white/10 bg-[linear-gradient(135deg,rgba(0,148,255,0.12),rgba(255,116,0,0.10))] p-6 sm:p-10">
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Consulta de cobertura</p>
           <h2 className="mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
             Como funciona a consulta com o Starzinho
           </h2>
@@ -317,7 +317,7 @@ export default function V1LandingPage() {
               </div>
             ))}
           </div>
-          <a href="#consulta" className="mt-8 inline-flex rounded-full bg-orange-400 px-6 py-3 font-black text-[#130905] transition hover:-translate-y-0.5">
+          <a href="#consulta" className="mt-8 inline-flex rounded-full bg-[#ff7400] px-6 py-3 font-black text-[#130905] transition hover:-translate-y-0.5">
             Comecar consulta agora
           </a>
         </div>
@@ -347,7 +347,7 @@ export default function V1LandingPage() {
 
       <section className="px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-5xl">
-          <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-300">Perguntas frequentes</p>
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Perguntas frequentes</p>
           <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">Antes de consultar sua rota</h2>
           <div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055]">
             {faqs.map(([question, answer]) => (
@@ -363,14 +363,14 @@ export default function V1LandingPage() {
       </section>
 
       <section className="px-5 pb-20 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-orange-200/20 bg-[radial-gradient(circle_at_20%_20%,rgba(255,121,31,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#ff7400]/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
           <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
             Quer saber se essa rota chega ate sua rua?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
             Informe seu bairro e sua rua para consultar a disponibilidade da ST1 pelo WhatsApp.
           </p>
-          <a href="#consulta" className="mt-8 inline-flex rounded-full bg-gradient-to-r from-orange-400 to-cyan-200 px-8 py-4 font-black text-[#07111f] transition hover:-translate-y-0.5">
+          <a href="#consulta" className="mt-8 inline-flex rounded-full bg-[#ff7400] px-8 py-4 font-black text-[#07111f] transition hover:-translate-y-0.5">
             Verificar minha rua
           </a>
         </div>

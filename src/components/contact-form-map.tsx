@@ -50,7 +50,7 @@ export default function ContactFormMap() {
       <section className="grid gap-6 lg:grid-cols-[420px_minmax(0,1fr)]">
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
           <div className="border-b border-slate-200 px-6 py-5">
-            <p className="text-sm font-medium uppercase tracking-[0.12em] text-teal-700">
+            <p className="text-sm font-medium uppercase tracking-[0.12em] text-[#333399]">
               Contato
             </p>
             <h1 className="mt-2 text-2xl font-semibold text-slate-900">
@@ -64,7 +64,7 @@ export default function ContactFormMap() {
               <input
                 name="name"
                 required
-                className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#333399] focus:ring-2 focus:ring-[#7f5aff]/20"
                 placeholder="Seu nome"
               />
             </label>
@@ -75,7 +75,7 @@ export default function ContactFormMap() {
                 type="email"
                 name="email"
                 required
-                className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#333399] focus:ring-2 focus:ring-[#7f5aff]/20"
                 placeholder="voce@empresa.com"
               />
             </label>
@@ -86,7 +86,7 @@ export default function ContactFormMap() {
                 name="bairro"
                 value={selectedBairroId}
                 onChange={(event) => setSelectedBairroId(event.target.value)}
-                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#333399] focus:ring-2 focus:ring-[#7f5aff]/20"
               >
                 {bairros.map((feature) => (
                   <option key={feature.properties.id} value={feature.properties.id}>
@@ -102,14 +102,14 @@ export default function ContactFormMap() {
                 name="message"
                 required
                 rows={5}
-                className="w-full resize-none rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full resize-none rounded-md border border-slate-300 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#333399] focus:ring-2 focus:ring-[#7f5aff]/20"
                 placeholder="Descreva a sua necessidade."
               />
             </label>
 
             <button
               type="submit"
-              className="inline-flex h-11 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
+              className="inline-flex h-11 items-center justify-center rounded-md bg-[#ff7400] px-4 text-sm font-medium text-white transition hover:bg-[#ff8a1f]"
             >
               Registrar contato
             </button>
@@ -132,7 +132,7 @@ export default function ContactFormMap() {
               </pre>
             </div>
 
-            {status ? <p className="text-sm text-teal-700">{status}</p> : null}
+            {status ? <p className="text-sm text-[#333399]">{status}</p> : null}
           </form>
         </div>
 

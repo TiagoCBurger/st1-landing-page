@@ -3,8 +3,8 @@
 :root {
   --background: #050914;
   --foreground: #f8fafc;
-  --brand-blue: #0094ff;
-  --brand-orange: #ff791f;
+  --brand-blue: #333399;
+  --brand-orange: #ff7400;
   --brand-cyan: #67e8f9;
 }
 
@@ -73,7 +73,7 @@ details summary::-webkit-details-marker {
 }
 
 .lp-animated :is(button, a[href]):hover {
-  box-shadow: 0 0 34px rgba(255, 121, 31, 0.28);
+  box-shadow: 0 0 34px rgba(255, 116, 0, 0.28);
 }
 
 .lp-animated .lp-float {

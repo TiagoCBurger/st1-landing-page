@@ -141,7 +141,7 @@ export default function LpConsultaForm({
       <div className="absolute -left-3 top-8 hidden size-6 rotate-45 border-b border-l border-white/10 bg-[#10213a] lg:block" />
 
       <div className="mb-4 flex items-center gap-3">
-        <div className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-cyan-200 to-orange-200 text-sm font-black text-[#061322]">
+        <div className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-cyan-200 to-[#ff7400] text-sm font-black text-[#061322]">
           ST
         </div>
         <div>
@@ -185,7 +185,7 @@ export default function LpConsultaForm({
 
       <div className="mb-5 h-2 overflow-hidden rounded-full bg-white/10">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-orange-300 transition-all duration-500"
+          className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-[#ff7400] transition-all duration-500"
           style={{ width: progress }}
         />
       </div>
@@ -257,7 +257,7 @@ export default function LpConsultaForm({
 
             <button
               type="submit"
-              className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-orange-300 px-5 py-4 text-base font-black text-[#130905] shadow-[0_0_34px_rgba(255,121,31,0.36)] transition hover:-translate-y-0.5 hover:shadow-[0_0_42px_rgba(255,121,31,0.5)]"
+              className="w-full rounded-2xl bg-[#ff7400] px-5 py-4 text-base font-black text-[#130905] shadow-[0_0_34px_rgba(255,116,0,0.36)] transition hover:-translate-y-0.5 hover:shadow-[0_0_42px_rgba(255,116,0,0.5)]"
             >
               Ver se encontrei rota
             </button>
@@ -308,7 +308,7 @@ export default function LpConsultaForm({
               </button>
               <button
                 type="submit"
-                className="rounded-2xl bg-gradient-to-r from-orange-400 to-cyan-200 px-5 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,121,31,0.28)] transition hover:-translate-y-0.5"
+                className="rounded-2xl bg-[#ff7400] px-5 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,116,0,0.28)] transition hover:-translate-y-0.5"
               >
                 Liberar planos
               </button>
