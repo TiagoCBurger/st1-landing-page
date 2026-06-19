@@ -51,6 +51,25 @@ const purchaseFaqs = [
   ],
 ];
 
+const planHighlights = {
+  "1000MB": {
+    eyebrow: "Essencial para rotina conectada",
+    audience: "Ideal para navegação, trabalho remoto, estudos, streaming e jogos com ótimo custo-benefício.",
+    devices: "Casa conectada",
+    speedNote: "1 Giga de fibra",
+    benefit: "Equilíbrio entre velocidade e preço",
+    popular: false,
+  },
+  "1300MB": {
+    eyebrow: "Mais folga para uso intenso",
+    audience: "Perfeito para muitos aparelhos, vídeos em alta definição, chamadas, jogos e downloads ao mesmo tempo.",
+    devices: "Mais dispositivos",
+    speedNote: "1.3 Giga de fibra",
+    benefit: "Mais performance por R$ 20 a mais",
+    popular: true,
+  },
+} as const;
+
 export default function V2LandingPage() {
   const availableBairros = coverageBairros.filter((bairro) => bairro.available);
   const consultationFormRef = useRef<HTMLDivElement | null>(null);
@@ -253,7 +272,7 @@ export default function V2LandingPage() {
 
   if (isLoadingCoverage) {
     return (
-      <main className="grid min-h-screen place-items-center bg-[#050914] px-5 py-16 text-white sm:px-8 lg:px-12">
+      <main className="lp-animated grid min-h-screen place-items-center bg-[#050914] px-5 py-16 text-white sm:px-8 lg:px-12">
         <section className="w-full max-w-3xl rounded-[2.5rem] border border-white/10 bg-[#07111f] p-8 text-center shadow-2xl">
           <div className="mx-auto size-16 animate-spin rounded-full border-4 border-cyan-300/20 border-t-cyan-200" />
           <h1 className="mt-6 text-3xl font-black tracking-[-0.05em] text-white">Consultando rota da ST1...</h1>
@@ -267,9 +286,9 @@ export default function V2LandingPage() {
 
   if (showResults) {
     return (
-      <main className="min-h-screen overflow-hidden bg-[#050914] text-white">
+      <main className="lp-animated min-h-screen overflow-hidden bg-[#050914] text-white">
         <section className="relative isolate min-h-screen px-5 py-6 sm:px-8 lg:px-12">
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.32),transparent_34%),radial-gradient(circle_at_86%_14%,rgba(255,114,26,0.26),transparent_30%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
+          <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.32),transparent_34%),radial-gradient(circle_at_86%_14%,rgba(255,114,26,0.26),transparent_30%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
 
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
             <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
@@ -295,50 +314,112 @@ export default function V2LandingPage() {
           </div>
 
           <div className="mx-auto mt-12 max-w-7xl">
-            <div className="grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-start">
-              <div>
+            <div className="grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-stretch">
+              <div className="order-1 lg:col-start-1 lg:row-start-1">
                 <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Resultado da consulta</p>
                 <h1 className="mt-4 text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl">
                   Planos disponíveis para escolher agora
                 </h1>
-                <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-5">
-                  <p className="text-sm font-bold text-cyan-100">Endereço em análise</p>
-                  <p className="mt-2 text-lg font-black text-white">
-                    {lead?.bairro}, {lead?.rua}
-                  </p>
-                  <p className="mt-3 text-sm leading-6 text-slate-300">
-                    Um atendente confirma a disponibilidade final pelo WhatsApp {lead?.whatsapp}.
-                  </p>
-                </div>
               </div>
 
-              <div id="planos" className="grid gap-5 md:grid-cols-2">
-                {plans.map((plan) => (
-                  <article
-                    key={plan.name}
-                    className="relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-[#081629] p-6 shadow-2xl"
-                  >
-                    <div className="absolute -right-14 -top-14 size-40 rounded-full bg-cyan-300/10 blur-2xl" />
-                    <p className="text-sm font-black uppercase tracking-[0.22em] text-orange-300">{plan.label}</p>
-                    <h2 className="mt-5 text-5xl font-black tracking-[-0.06em] text-white">{plan.name}</h2>
-                    <p className="mt-2 text-2xl font-black text-cyan-200">{plan.price}</p>
-                    <p className="mt-5 text-sm leading-6 text-slate-300">{plan.description}</p>
-                    <ul className="mt-6 space-y-3">
-                      {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-3 text-sm font-semibold text-slate-100">
-                          <span className="size-2 rounded-full bg-cyan-200 shadow-[0_0_14px_#67e8f9]" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    <a
-                      href="#proximos-passos"
-                      className="mt-7 inline-flex w-full justify-center rounded-2xl bg-gradient-to-r from-orange-400 to-cyan-200 px-5 py-4 text-base font-black text-[#07111f] transition hover:-translate-y-0.5"
+              <div
+                id="planos"
+                className="order-2 grid gap-5 pt-4 md:grid-cols-2 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full"
+              >
+                {plans.map((plan) => {
+                  const highlight = planHighlights[plan.name as keyof typeof planHighlights];
+
+                  return (
+                    <article
+                      key={plan.name}
+                      className={`relative flex min-h-[620px] flex-col overflow-visible rounded-[2rem] border p-5 shadow-2xl transition hover:-translate-y-1 sm:p-6 lg:h-full ${
+                        highlight?.popular
+                          ? "border-orange-200/70 bg-[radial-gradient(circle_at_30%_0%,rgba(255,121,31,0.34),transparent_34%),linear-gradient(160deg,#12233d_0%,#07111f_64%,#050914_100%)] shadow-[0_26px_80px_rgba(255,121,31,0.18)]"
+                          : "border-white/10 bg-[linear-gradient(160deg,#081629_0%,#06101f_100%)]"
+                      }`}
                     >
-                      Quero este plano
-                    </a>
-                  </article>
-                ))}
+                      <div className="absolute -right-16 -top-16 size-48 rounded-full bg-cyan-300/12 blur-2xl" />
+                      {highlight?.popular ? (
+                        <div className="absolute right-6 top-0 z-10 -translate-y-1/2 rounded-full border border-orange-100/80 bg-orange-300 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-[#170a02] shadow-[0_0_28px_rgba(255,121,31,0.45)]">
+                          Mais popular
+                        </div>
+                      ) : null}
+
+                      <div className="relative">
+                        <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-200">
+                          {highlight?.eyebrow ?? plan.label}
+                        </p>
+                        <div className="mt-6 flex items-end justify-between gap-4">
+                          <div>
+                            <h2 className="text-5xl font-black tracking-[-0.06em] text-white sm:text-6xl">
+                              {plan.name}
+                            </h2>
+                            <p className="mt-2 text-sm font-bold text-cyan-100">{highlight?.speedNote}</p>
+                          </div>
+                          <div className="rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-right">
+                            <p className="text-[11px] font-black uppercase tracking-[0.14em] text-cyan-100">Perfil</p>
+                            <p className="mt-1 text-sm font-black text-white">{highlight?.devices}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="relative mt-7 rounded-[1.5rem] border border-white/10 bg-[#050914]/70 p-4">
+                        <p className="text-sm font-bold text-slate-300">A partir de</p>
+                        <p className="mt-1 text-3xl font-black tracking-[-0.04em] text-cyan-100">{plan.price}</p>
+                        <p className="mt-3 text-sm font-black text-orange-200">{highlight?.benefit}</p>
+                      </div>
+
+                      <p className="relative mt-5 text-sm leading-6 text-slate-300">
+                        {highlight?.audience ?? plan.description}
+                      </p>
+
+                      <ul className="relative mb-8 mt-6 space-y-3">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-center gap-3 text-sm font-semibold text-slate-100">
+                            <span className="grid size-5 shrink-0 place-items-center rounded-full bg-cyan-200 text-[11px] font-black text-[#06101f]">
+                              ✓
+                            </span>
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <a
+                        href="#proximos-passos"
+                        className={`relative mt-auto inline-flex w-full justify-center rounded-2xl px-5 py-4 text-base font-black transition hover:-translate-y-0.5 ${
+                          highlight?.popular
+                            ? "bg-orange-300 text-[#170a02] shadow-[0_0_34px_rgba(255,121,31,0.32)]"
+                            : "bg-gradient-to-r from-cyan-200 to-white text-[#07111f]"
+                        }`}
+                      >
+                        {highlight?.popular ? "Quero o mais popular" : "Quero este plano"}
+                      </a>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <div className="order-3 lg:col-start-1 lg:row-start-2">
+                <div className="lp-motion-card overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.06] lg:mt-6">
+                  <div className="p-5 pb-0">
+                    <p className="text-sm font-bold text-cyan-100">Endereço em análise</p>
+                    <p className="mt-2 text-lg font-black text-white">
+                      {lead?.bairro}, {lead?.rua}
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-slate-300">
+                      Um atendente confirma a disponibilidade final pelo WhatsApp {lead?.whatsapp}.
+                    </p>
+                  </div>
+                  <div className="relative mt-5 h-[400px] overflow-hidden sm:h-[355px]">
+                    <Image
+                      src="/starzinho no note.png"
+                      alt="Starzinho acompanhando a analise do endereco"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 40vw"
+                      className="lp-float object-cover object-top"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -362,7 +443,7 @@ export default function V2LandingPage() {
                   key={item.title}
                   className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30"
                 >
-                  <span className="mb-5 block size-3 rounded-full bg-orange-300 shadow-[0_0_22px_#fb923c]" />
+                  <span className="lp-pulse-dot mb-5 block size-3 rounded-full bg-orange-300 shadow-[0_0_22px_#fb923c]" />
                   <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
                 </div>
@@ -372,7 +453,7 @@ export default function V2LandingPage() {
         </section>
 
         <section className="px-5 py-20 sm:px-8 lg:px-12">
-          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
             <div>
               <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Por que avançar agora</p>
               <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
@@ -382,14 +463,23 @@ export default function V2LandingPage() {
                 A escolha do plano pode ser simples: 1000MB para velocidade e custo-benefício, 1300MB para quem quer
                 mais folga em casas com uso intenso.
               </p>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                {stats.map(([title, text]) => (
+                  <div key={title} className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5">
+                    <h3 className="text-lg font-black tracking-[-0.03em] text-white">{title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {stats.map(([title, text]) => (
-                <div key={title} className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5">
-                  <h3 className="text-lg font-black tracking-[-0.03em] text-white">{title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
-                </div>
-              ))}
+            <div className="grid min-h-[360px] place-items-center lg:min-h-[520px]">
+              <Image
+                src="/starzinho-no-rocket.png"
+                alt="Starzinho voando em um foguete com notebook"
+                width={1254}
+                height={1254}
+                className="lp-float h-auto w-full max-w-[520px] object-contain"
+              />
             </div>
           </div>
         </section>
@@ -430,9 +520,9 @@ export default function V2LandingPage() {
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#050914] text-white">
+      <main className="lp-animated min-h-screen overflow-hidden bg-[#050914] text-white">
       <section className="relative isolate min-h-screen px-5 pb-16 pt-6 sm:px-8 lg:px-12">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.36),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,114,26,0.30),transparent_32%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
+        <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.36),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,114,26,0.30),transparent_32%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
         <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-cyan-300/10 bg-cyan-300/5 blur-3xl" />
 
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
@@ -456,8 +546,8 @@ export default function V2LandingPage() {
 
         <div id="topo" className="mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100">
-            <span className="size-2 rounded-full bg-orange-400 shadow-[0_0_18px_#ff8a1d]" />
-            Consulta de cobertura ST1
+            <span className="lp-pulse-dot size-2 rounded-full bg-orange-400 shadow-[0_0_18px_#ff8a1d]" />
+            Internet Fibra Ótica em São Luiz
           </div>
 
           <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
@@ -469,7 +559,7 @@ export default function V2LandingPage() {
         </div>
 
         <div id="consulta" ref={consultationFormRef} className="mx-auto mt-10 max-w-5xl">
-          <div className="overflow-hidden rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
+          <div className="lp-motion-card overflow-hidden rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
             <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
               <label className="grid gap-3 text-left sm:grid-cols-[140px_minmax(0,1fr)] sm:items-center">
                 <span className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Bairro</span>
@@ -501,7 +591,7 @@ export default function V2LandingPage() {
               width={301}
               height={301}
               priority
-              className="h-full w-full object-cover"
+              className="lp-float h-full w-full object-cover"
             />
           </div>
           <div className="relative flex-1 rounded-2xl rounded-tl-sm border border-white/20 bg-white/82 px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] backdrop-blur before:absolute before:left-[-8px] before:top-7 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/20 before:bg-white/82 sm:px-6 sm:py-5">
@@ -514,8 +604,35 @@ export default function V2LandingPage() {
         </div>
       </section>
 
+      <section className="relative px-5 py-20 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-3xl">
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-300">Chega de conexão instável</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+              Internet para trabalhar, estudar, jogar e assistir sem depender da sorte.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-slate-300">
+              Sua rotina precisa de uma conexão que aguente vários aparelhos, chamadas de vídeo, streaming e jogos
+              online ao mesmo tempo.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            {painPoints.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30"
+              >
+                <span className="lp-pulse-dot mb-5 block size-3 rounded-full bg-orange-300 shadow-[0_0_22px_#fb923c]" />
+                <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="px-5 py-20 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl rounded-[2.75rem] border border-white/10 bg-[linear-gradient(135deg,rgba(0,148,255,0.12),rgba(255,121,31,0.10))] p-6 sm:p-10">
+        <div className="lp-motion-card mx-auto max-w-7xl rounded-[2.75rem] border border-white/10 bg-[linear-gradient(135deg,rgba(0,148,255,0.12),rgba(255,121,31,0.10))] p-6 sm:p-10">
           <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-200">Consulta de cobertura</p>
           <h2 className="mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
             Como funciona a consulta com o Starzinho
@@ -538,7 +655,7 @@ export default function V2LandingPage() {
       </section>
 
       <section className="px-5 pb-20 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-orange-200/20 bg-[radial-gradient(circle_at_20%_20%,rgba(255,121,31,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
+        <div className="lp-gradient-shift lp-motion-card mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-orange-200/20 bg-[radial-gradient(circle_at_20%_20%,rgba(255,121,31,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
           <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
             Quer saber se essa rota chega ate sua rua?
           </h2>
