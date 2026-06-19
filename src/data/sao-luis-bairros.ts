@@ -267,5 +267,26 @@ export const saoLuisBairrosGeoJson: BairroFeatureCollection = {
         ]],
       },
     },
+    {
+      type: "Feature",
+      properties: {
+        id: "cohatrac",
+        name: "Cohatrac",
+        zone: "Area Residencial",
+        postalCode: "65053-000",
+        centroid: [-44.2142, -2.5376],
+        radiusKm: 1.5,
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [[
+          [-44.2357, -2.5579],
+          [-44.1927, -2.5579],
+          [-44.1927, -2.5173],
+          [-44.2357, -2.5173],
+          [-44.2357, -2.5579],
+        ]],
+      },
+    },
   ],
 };

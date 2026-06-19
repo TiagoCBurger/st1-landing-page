@@ -1,8 +1,20 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
-import { coverageBairros, faqs, painPoints, plans, stats } from "@/components/lp/lp-data";
+import { coverageBairros, painPoints, plans, stats } from "@/components/lp/lp-data";
+import { saoLuisBairrosGeoJson } from "@/data/sao-luis-bairros";
+
+const BairroMap = dynamic(() => import("@/components/bairro-map"), {
+  ssr: false,
+  loading: () => (
+    <div className="grid min-h-[220px] place-items-center bg-[#050914] text-sm font-bold text-cyan-100/75">
+      Carregando mapa...
+    </div>
+  ),
+});
 
 type Lead = {
   bairro: string;
@@ -11,21 +23,109 @@ type Lead = {
   whatsapp: string;
 };
 
+const steps = [
+  ["Informe seu bairro", "Escolha uma das regioes com viabilidade no formulario."],
+  ["Digite sua rua", "Com sua rua, conseguimos consultar melhor a disponibilidade."],
+  ["O Starzinho te guia", "Depois da consulta, o atendimento segue pelo WhatsApp."],
+  ["A ST1 confirma", "O time verifica se a instalacao pode avancar no seu endereco."],
+  ["Orientacao do plano ideal", "O atendimento te ajuda a seguir com a melhor opcao."],
+  ["Instalacao", "Se houver disponibilidade, voce recebe os proximos passos para ativacao."],
+];
+
+const purchaseFaqs = [
+  [
+    "Qual plano faz mais sentido para minha casa?",
+    "O plano de 1000MB atende muito bem quem quer velocidade, estabilidade e bom custo-benefício. O de 1300MB é indicado para casas com mais pessoas, mais aparelhos conectados e uso mais intenso de internet.",
+  ],
+  [
+    "Preciso escolher o plano agora?",
+    "Não precisa decidir sozinho. Depois da consulta, o atendimento da ST1 te ajuda a confirmar a melhor opção para sua rotina.",
+  ],
+  [
+    "A ST1 usa fibra óptica?",
+    "Sim. A comunicação da ST1 reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
+  ],
+  [
+    "O atendimento continua por onde?",
+    "O atendimento segue pelo WhatsApp, com os dados da sua consulta e o contexto do endereço informado.",
+  ],
+];
+
 export default function V2LandingPage() {
   const availableBairros = coverageBairros.filter((bairro) => bairro.available);
+  const consultationFormRef = useRef<HTMLDivElement | null>(null);
+  const streetInputRef = useRef<HTMLInputElement | null>(null);
+  const modalStreetInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedBairroId, setSelectedBairroId] = useState("");
   const [rua, setRua] = useState("");
   const [nome, setNome] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [lead, setLead] = useState<Lead | null>(null);
   const [status, setStatus] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoadingCoverage, setIsLoadingCoverage] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const selectedBairro = availableBairros.find((bairro) => bairro.id === selectedBairroId);
+  const selectedFeature = useMemo(
+    () => saoLuisBairrosGeoJson.features.find((feature) => feature.properties.id === selectedBairroId) ?? null,
+    [selectedBairroId],
+  );
 
-  function handleAddressSubmit(event: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    if (!isModalOpen) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      modalStreetInputRef.current?.focus();
+    }, 0);
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+      }
+    }
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isModalOpen]);
+
+  function openConsultationModal() {
+    setStatus("");
+    setIsModalOpen(true);
+  }
+
+  function resetAfterBairroChange(bairroId: string) {
+    setSelectedBairroId(bairroId);
+    setRua("");
+    setNome("");
+    setWhatsapp("");
+    setLead(null);
+    setStatus("");
+    setIsLoadingCoverage(false);
+    setShowResults(false);
+
+    if (!bairroId) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      consultationFormRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      streetInputRef.current?.focus();
+    }, 0);
+  }
+
+  function handleAvailabilitySubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!selectedBairro) {
@@ -38,13 +138,6 @@ export default function V2LandingPage() {
       return;
     }
 
-    setStatus("");
-    setIsModalOpen(true);
-  }
-
-  function handleLeadSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
     if (nome.trim().length < 3) {
       setStatus("Digite seu nome completo.");
       return;
@@ -56,22 +149,284 @@ export default function V2LandingPage() {
     }
 
     const nextLead = {
-      bairro: selectedBairro?.name ?? "",
+      bairro: selectedBairro.name,
       rua: rua.trim(),
       nome: nome.trim(),
       whatsapp: whatsapp.trim(),
     };
 
     setLead(nextLead);
-    setIsModalOpen(false);
     setIsLoadingCoverage(true);
+    setShowResults(false);
     setStatus("");
 
     window.setTimeout(() => {
       setIsLoadingCoverage(false);
+      setIsModalOpen(false);
       setShowResults(true);
-      document.getElementById("planos")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 1800);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 1200);
+  }
+
+  function renderConsultationForm(isModal = false) {
+    if (!selectedBairro) {
+      return null;
+    }
+
+    return (
+      <form onSubmit={handleAvailabilitySubmit} className="grid gap-5 p-4 text-left sm:p-5 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#050914]">
+          <div className="border-b border-white/10 px-4 py-3">
+            <p className="text-sm font-black text-white">{selectedBairro.name}</p>
+            <p className="mt-1 text-xs leading-5 text-cyan-100/75">{selectedBairro.text}</p>
+          </div>
+          <BairroMap selectedFeature={selectedFeature} variant="dark" size="compact" />
+        </div>
+
+        <div className="grid content-start gap-4">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Dados da consulta</p>
+            <h2 className="mt-2 text-2xl font-black tracking-[-0.04em] text-white">
+              Verifique a disponibilidade na sua rua
+            </h2>
+          </div>
+
+          <label className="block">
+            <span className="text-sm font-bold text-cyan-100">Rua</span>
+            <input
+              ref={isModal ? modalStreetInputRef : streetInputRef}
+              value={rua}
+              onChange={(event) => {
+                setRua(event.target.value);
+                setStatus("");
+                setShowResults(false);
+              }}
+              placeholder="Digite o nome da sua rua"
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+              required
+            />
+          </label>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-bold text-cyan-100">Nome</span>
+              <input
+                value={nome}
+                onChange={(event) => {
+                  setNome(event.target.value);
+                  setStatus("");
+                }}
+                placeholder="Seu nome"
+                className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+                required
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-sm font-bold text-cyan-100">WhatsApp</span>
+              <input
+                value={whatsapp}
+                onChange={(event) => {
+                  setWhatsapp(event.target.value);
+                  setStatus("");
+                }}
+                inputMode="tel"
+                placeholder="(98) 90000-0000"
+                className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+                required
+              />
+            </label>
+          </div>
+
+          {status ? <p className="text-sm leading-6 text-orange-200">{status}</p> : null}
+
+          <button
+            type="submit"
+            className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-cyan-200 px-6 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,121,31,0.28)] transition hover:-translate-y-0.5"
+          >
+            Verificar disponibilidade
+          </button>
+        </div>
+      </form>
+    );
+  }
+
+  if (isLoadingCoverage) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-[#050914] px-5 py-16 text-white sm:px-8 lg:px-12">
+        <section className="w-full max-w-3xl rounded-[2.5rem] border border-white/10 bg-[#07111f] p-8 text-center shadow-2xl">
+          <div className="mx-auto size-16 animate-spin rounded-full border-4 border-cyan-300/20 border-t-cyan-200" />
+          <h1 className="mt-6 text-3xl font-black tracking-[-0.05em] text-white">Consultando rota da ST1...</h1>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-300">
+            Estamos verificando o bairro, a rua e preparando os planos residenciais para sua consulta.
+          </p>
+        </section>
+      </main>
+    );
+  }
+
+  if (showResults) {
+    return (
+      <main className="min-h-screen overflow-hidden bg-[#050914] text-white">
+        <section className="relative isolate min-h-screen px-5 py-6 sm:px-8 lg:px-12">
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.32),transparent_34%),radial-gradient(circle_at_86%_14%,rgba(255,114,26,0.26),transparent_30%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
+
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+            <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
+              <Image
+                src="/logo-ST1-03%201.png"
+                alt="ST1 Internet"
+                width={453}
+                height={327}
+                className="h-auto w-[50px] sm:w-[58px]"
+              />
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                setShowResults(false);
+                setLead(null);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="rounded-full border border-cyan-200/30 bg-cyan-300/10 px-5 py-2.5 text-sm font-extrabold text-cyan-50 transition hover:bg-cyan-300 hover:text-[#04101f]"
+            >
+              Nova consulta
+            </button>
+          </div>
+
+          <div className="mx-auto mt-12 max-w-7xl">
+            <div className="grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-start">
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Resultado da consulta</p>
+                <h1 className="mt-4 text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl">
+                  Planos disponíveis para escolher agora
+                </h1>
+                <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-5">
+                  <p className="text-sm font-bold text-cyan-100">Endereço em análise</p>
+                  <p className="mt-2 text-lg font-black text-white">
+                    {lead?.bairro}, {lead?.rua}
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-slate-300">
+                    Um atendente confirma a disponibilidade final pelo WhatsApp {lead?.whatsapp}.
+                  </p>
+                </div>
+              </div>
+
+              <div id="planos" className="grid gap-5 md:grid-cols-2">
+                {plans.map((plan) => (
+                  <article
+                    key={plan.name}
+                    className="relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-[#081629] p-6 shadow-2xl"
+                  >
+                    <div className="absolute -right-14 -top-14 size-40 rounded-full bg-cyan-300/10 blur-2xl" />
+                    <p className="text-sm font-black uppercase tracking-[0.22em] text-orange-300">{plan.label}</p>
+                    <h2 className="mt-5 text-5xl font-black tracking-[-0.06em] text-white">{plan.name}</h2>
+                    <p className="mt-2 text-2xl font-black text-cyan-200">{plan.price}</p>
+                    <p className="mt-5 text-sm leading-6 text-slate-300">{plan.description}</p>
+                    <ul className="mt-6 space-y-3">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-3 text-sm font-semibold text-slate-100">
+                          <span className="size-2 rounded-full bg-cyan-200 shadow-[0_0_14px_#67e8f9]" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href="#proximos-passos"
+                      className="mt-7 inline-flex w-full justify-center rounded-2xl bg-gradient-to-r from-orange-400 to-cyan-200 px-5 py-4 text-base font-black text-[#07111f] transition hover:-translate-y-0.5"
+                    >
+                      Quero este plano
+                    </a>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative px-5 py-20 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-7xl">
+            <div className="max-w-3xl">
+              <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-300">Chega de conexão instável</p>
+              <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+                Internet para trabalhar, estudar, jogar e assistir sem depender da sorte.
+              </h2>
+              <p className="mt-5 text-lg leading-8 text-slate-300">
+                Sua rotina precisa de uma conexão que aguente vários aparelhos, chamadas de vídeo, streaming e jogos
+                online ao mesmo tempo.
+              </p>
+            </div>
+            <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+              {painPoints.map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30"
+                >
+                  <span className="mb-5 block size-3 rounded-full bg-orange-300 shadow-[0_0_22px_#fb923c]" />
+                  <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 py-20 sm:px-8 lg:px-12">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Por que avançar agora</p>
+              <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+                A ST1 entrega fibra para uma rotina residencial cada vez mais conectada.
+              </h2>
+              <p className="mt-5 text-lg leading-8 text-slate-300">
+                A escolha do plano pode ser simples: 1000MB para velocidade e custo-benefício, 1300MB para quem quer
+                mais folga em casas com uso intenso.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {stats.map(([title, text]) => (
+                <div key={title} className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5">
+                  <h3 className="text-lg font-black tracking-[-0.03em] text-white">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 py-20 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-5xl">
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-300">Antes de escolher</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+              Dúvidas comuns antes de contratar
+            </h2>
+            <div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055]">
+              {purchaseFaqs.map(([question, answer]) => (
+                <details key={question} className="group p-5 open:bg-white/[0.04] sm:p-6">
+                  <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-white">
+                    {question}
+                  </summary>
+                  <p className="mt-4 text-sm leading-7 text-slate-300">{answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="proximos-passos" className="px-5 pb-20 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-orange-200/20 bg-[radial-gradient(circle_at_20%_20%,rgba(255,121,31,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-200">Próximo passo</p>
+            <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+              Seu endereço já entrou na análise da ST1.
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+              O atendimento continua pelo WhatsApp {lead?.whatsapp}. O time confirma a disponibilidade final e te ajuda
+              a seguir com o plano ideal para sua casa.
+            </p>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -82,286 +437,170 @@ export default function V2LandingPage() {
 
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
-            <span className="grid size-11 place-items-center rounded-2xl bg-white text-lg font-black text-[#072f78] shadow-[0_0_28px_rgba(0,148,255,0.35)]">
-              ST1
-            </span>
-            <span className="hidden text-sm font-semibold uppercase tracking-[0.22em] text-cyan-100 sm:inline">
-              Internet Fibra
-            </span>
+            <Image
+              src="/logo-ST1-03%201.png"
+              alt="ST1 Internet"
+              width={453}
+              height={327}
+              className="h-auto w-[50px] sm:w-[58px]"
+            />
           </a>
-          <a
-            href="#consulta"
+          <button
+            type="button"
+            onClick={openConsultationModal}
             className="rounded-full border border-orange-300/40 bg-orange-400 px-5 py-2.5 text-sm font-extrabold text-[#120804] shadow-[0_0_32px_rgba(255,121,31,0.35)] transition hover:-translate-y-0.5 hover:bg-orange-300"
           >
             Consultar rua
-          </a>
+          </button>
         </div>
 
-        <div id="topo" className="mx-auto grid max-w-7xl items-center gap-10 pt-12 lg:grid-cols-[0.92fr_1.08fr] lg:pt-24">
-          <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100">
-              <span className="size-2 rounded-full bg-orange-400 shadow-[0_0_18px_#ff8a1d]" />
-              Consulta de cobertura ST1
-            </div>
-
-            <h1 className="text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
-              Escolha seu bairro.
-              <span className="block bg-gradient-to-r from-cyan-200 via-white to-orange-200 bg-clip-text text-transparent">
-                Depois diga sua rua.
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              O Starzinho consulta a rota da ST1 por bairro e rua. Depois de confirmar seus dados, mostramos os planos
-              residenciais disponíveis.
-            </p>
+        <div id="topo" className="mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100">
+            <span className="size-2 rounded-full bg-orange-400 shadow-[0_0_18px_#ff8a1d]" />
+            Consulta de cobertura ST1
           </div>
 
-          <div id="consulta" className="relative">
-            <div className="absolute -inset-5 rounded-[2.75rem] bg-gradient-to-br from-cyan-400/20 via-transparent to-orange-400/20 blur-2xl" />
-            <div className="relative rounded-[2.5rem] border border-white/12 bg-[#07111f]/90 p-5 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur sm:p-7">
-              <div className="mb-6 rounded-[2rem] border border-cyan-200/15 bg-cyan-300/10 p-5">
-                <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Passo 1</p>
-                <h2 className="mt-2 text-2xl font-black tracking-[-0.04em] text-white">
-                  Consulte se a ST1 chega na sua rua
-                </h2>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  Primeiro selecione um bairro com rota disponível. Em seguida, informe o nome da rua.
-                </p>
-              </div>
+          <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
+            Descubra se a fibra da ST1
+            <span className="block bg-gradient-to-r from-cyan-200 via-white to-orange-200 bg-clip-text text-transparent">
+              chega na sua rua.
+            </span>
+          </h1>
+        </div>
 
-              <form onSubmit={handleAddressSubmit} className="space-y-4">
-                <label className="block">
-                  <span className="text-sm font-bold text-cyan-100">Bairro</span>
-                  <select
-                    value={selectedBairroId}
-                    onChange={(event) => {
-                      setSelectedBairroId(event.target.value);
-                      setRua("");
-                      setStatus("");
-                      setShowResults(false);
-                    }}
-                    className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition focus:border-cyan-300 focus:ring-4"
-                    required
-                  >
-                    <option value="">Selecione seu bairro</option>
-                    {availableBairros.map((bairro) => (
-                      <option key={bairro.id} value={bairro.id}>
-                        {bairro.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                {selectedBairro ? (
-                  <label className="block">
-                    <span className="text-sm font-bold text-cyan-100">Rua</span>
-                    <input
-                      value={rua}
-                      onChange={(event) => {
-                        setRua(event.target.value);
-                        setStatus("");
-                        setShowResults(false);
-                      }}
-                      placeholder="Digite o nome da sua rua"
-                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
-                      required
-                    />
-                  </label>
-                ) : null}
-
-                {status ? <p className="text-sm leading-6 text-orange-200">{status}</p> : null}
-
-                <button
-                  type="submit"
-                  className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-cyan-200 px-6 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,121,31,0.28)] transition hover:-translate-y-0.5"
+        <div id="consulta" ref={consultationFormRef} className="mx-auto mt-10 max-w-5xl">
+          <div className="overflow-hidden rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
+            <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
+              <label className="grid gap-3 text-left sm:grid-cols-[140px_minmax(0,1fr)] sm:items-center">
+                <span className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Bairro</span>
+                <select
+                  value={selectedBairroId}
+                  onChange={(event) => resetAfterBairroChange(event.target.value)}
+                  className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition focus:border-cyan-300 focus:ring-4"
+                  required
                 >
-                  Buscar disponibilidade
-                </button>
-              </form>
+                  <option value="">Selecione seu bairro</option>
+                  {availableBairros.map((bairro) => (
+                    <option key={bairro.id} value={bairro.id}>
+                      {bairro.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
+
+            {selectedBairro ? renderConsultationForm() : null}
+          </div>
+        </div>
+
+        <div className="mx-auto mt-5 flex max-w-5xl items-start gap-3 text-left sm:gap-4">
+          <div className="relative size-20 shrink-0 overflow-hidden rounded-full border-2 border-orange-300 bg-[#07111f] shadow-[0_0_34px_rgba(255,121,31,0.32)] sm:size-24">
+            <Image
+              src="/perfil-starzinho.png"
+              alt="Starzinho"
+              width={301}
+              height={301}
+              priority
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="relative flex-1 rounded-2xl rounded-tl-sm border border-white/20 bg-white/82 px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] backdrop-blur before:absolute before:left-[-8px] before:top-7 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/20 before:bg-white/82 sm:px-6 sm:py-5">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#072f78]">Starzinho</p>
+            <p className="mt-1 text-base font-semibold leading-7 sm:text-lg">
+              Informe seu bairro e sua rua no formulário acima. Eu consulto a disponibilidade da ST1 e te mostro as
+              ofertas disponíveis para o seu endereço.
+            </p>
           </div>
         </div>
       </section>
 
-      {isModalOpen ? (
-        <div className="fixed inset-0 z-[1000] grid place-items-center bg-[#02050d]/80 px-5 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-[2rem] border border-white/12 bg-[#07111f] p-6 shadow-[0_28px_90px_rgba(0,0,0,0.6)]">
-            <div className="rounded-[1.5rem] border border-cyan-200/15 bg-cyan-300/10 p-4">
-              <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Passo 2</p>
-              <h2 className="mt-2 text-2xl font-black tracking-[-0.04em] text-white">Para continuar, informe seus dados</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
-                Vamos consultar: {selectedBairro?.name}, {rua}.
-              </p>
-            </div>
-
-            <form onSubmit={handleLeadSubmit} className="mt-5 space-y-4">
-              <label className="block">
-                <span className="text-sm font-bold text-cyan-100">Nome completo</span>
-                <input
-                  value={nome}
-                  onChange={(event) => setNome(event.target.value)}
-                  placeholder="Digite seu nome"
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
-                  required
-                />
-              </label>
-
-              <label className="block">
-                <span className="text-sm font-bold text-cyan-100">WhatsApp</span>
-                <input
-                  value={whatsapp}
-                  onChange={(event) => setWhatsapp(event.target.value)}
-                  inputMode="tel"
-                  placeholder="(98) 90000-0000"
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
-                  required
-                />
-              </label>
-
-              {status ? <p className="text-sm leading-6 text-orange-200">{status}</p> : null}
-
-              <div className="grid gap-3 sm:grid-cols-[0.72fr_1.28fr]">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    setStatus("");
-                  }}
-                  className="rounded-2xl border border-white/10 px-5 py-4 text-sm font-black text-cyan-100 transition hover:bg-white/10"
-                >
-                  Voltar
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-2xl bg-gradient-to-r from-orange-400 to-cyan-200 px-5 py-4 text-base font-black text-[#07111f] transition hover:-translate-y-0.5"
-                >
-                  Avançar
-                </button>
+      <section className="px-5 py-20 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl rounded-[2.75rem] border border-white/10 bg-[linear-gradient(135deg,rgba(0,148,255,0.12),rgba(255,121,31,0.10))] p-6 sm:p-10">
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-200">Consulta de cobertura</p>
+          <h2 className="mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+            Como funciona a consulta com o Starzinho
+          </h2>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+            Em poucos passos, voce descobre se a ST1 ja pode chegar ate sua rua.
+          </p>
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {steps.map(([title, text], index) => (
+              <div key={title} className="rounded-[2rem] border border-white/10 bg-[#050914]/60 p-5">
+                <span className="grid size-11 place-items-center rounded-2xl bg-white text-sm font-black text-[#072f78]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-5 text-xl font-black tracking-[-0.04em] text-white">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
               </div>
-            </form>
+            ))}
           </div>
         </div>
-      ) : null}
+      </section>
 
-      {isLoadingCoverage ? (
-        <section className="px-5 py-24 sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-3xl rounded-[2.5rem] border border-white/10 bg-[#07111f] p-8 text-center shadow-2xl">
-            <div className="mx-auto size-16 animate-spin rounded-full border-4 border-cyan-300/20 border-t-cyan-200" />
-            <h2 className="mt-6 text-3xl font-black tracking-[-0.05em] text-white">Consultando rota da ST1...</h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-300">
-              Estamos verificando o bairro, a rua e preparando os planos residenciais para sua consulta.
-            </p>
-          </div>
-        </section>
-      ) : null}
+      <section className="px-5 pb-20 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-orange-200/20 bg-[radial-gradient(circle_at_20%_20%,rgba(255,121,31,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
+          <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+            Quer saber se essa rota chega ate sua rua?
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+            Informe seu bairro e sua rua para consultar a disponibilidade da ST1 pelo WhatsApp.
+          </p>
+          <button
+            type="button"
+            onClick={openConsultationModal}
+            className="mt-8 inline-flex rounded-full bg-gradient-to-r from-orange-400 to-cyan-200 px-8 py-4 font-black text-[#07111f] transition hover:-translate-y-0.5"
+          >
+            Verificar minha rua
+          </button>
+        </div>
+      </section>
 
-      {showResults ? (
-        <>
-          <section id="planos" className="px-5 py-20 sm:px-8 lg:px-12">
-            <div className="mx-auto max-w-7xl">
-              <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Planos e pricing</p>
-                  <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-                    Planos liberados para sua consulta
-                  </h2>
-                  <p className="mt-5 text-lg leading-8 text-slate-300">
-                    Endereço em análise: {lead?.bairro}, {lead?.rua}. Um atendente confirma a disponibilidade final pelo
-                    WhatsApp {lead?.whatsapp}.
-                  </p>
-                </div>
-
-                <div className="grid gap-5 md:grid-cols-2">
-                  {plans.map((plan) => (
-                    <article
-                      key={plan.name}
-                      className="relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-[#081629] p-6 shadow-2xl"
-                    >
-                      <div className="absolute -right-14 -top-14 size-40 rounded-full bg-cyan-300/10 blur-2xl" />
-                      <p className="text-sm font-black uppercase tracking-[0.22em] text-orange-300">{plan.label}</p>
-                      <h3 className="mt-5 text-5xl font-black tracking-[-0.06em] text-white">{plan.name}</h3>
-                      <p className="mt-2 text-2xl font-black text-cyan-200">{plan.price}</p>
-                      <p className="mt-5 text-sm leading-6 text-slate-300">{plan.description}</p>
-                      <ul className="mt-6 space-y-3">
-                        {plan.features.map((feature) => (
-                          <li key={feature} className="flex items-center gap-3 text-sm font-semibold text-slate-100">
-                            <span className="size-2 rounded-full bg-cyan-200 shadow-[0_0_14px_#67e8f9]" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="relative px-5 py-20 sm:px-8 lg:px-12">
-            <div className="mx-auto max-w-7xl">
-              <div className="max-w-3xl">
-                <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-300">Chega de conexão instável</p>
-                <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-                  Internet para a rotina real da sua casa.
-                </h2>
-              </div>
-              <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-                {painPoints.map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30"
-                  >
-                    <span className="mb-5 block size-3 rounded-full bg-orange-300 shadow-[0_0_22px_#fb923c]" />
-                    <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="px-5 py-20 sm:px-8 lg:px-12">
-            <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      {isModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/80 px-4 py-6 backdrop-blur-sm">
+          <div
+            className="absolute inset-0"
+            aria-hidden="true"
+            onClick={() => setIsModalOpen(false)}
+          />
+          <div className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/12 bg-[#07111f]/95 shadow-[0_24px_90px_rgba(0,0,0,0.55)]">
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-6">
               <div>
-                <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">ST1 no Maranhão</p>
-                <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-                  A ST1 já conecta milhares de pessoas no Maranhão
-                </h2>
-                <p className="mt-5 text-lg leading-8 text-slate-300">
-                  Uma rede em expansão, feita para entregar mais velocidade e estabilidade para a rotina dos clientes.
-                </p>
+                <p className="text-sm font-black uppercase tracking-[0.18em] text-cyan-100">Consulta de cobertura</p>
+                <p className="mt-1 text-lg font-black text-white">Preencha seus dados para verificar a disponibilidade</p>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {stats.map(([title, text]) => (
-                  <div key={title} className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5">
-                    <h3 className="text-lg font-black tracking-[-0.03em] text-white">{title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
-                  </div>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="rounded-full border border-white/10 px-4 py-2 text-sm font-black text-cyan-100 transition hover:bg-white/10"
+              >
+                Fechar
+              </button>
             </div>
-          </section>
 
-          <section className="px-5 py-20 sm:px-8 lg:px-12">
-            <div className="mx-auto max-w-5xl">
-              <p className="text-sm font-black uppercase tracking-[0.26em] text-orange-300">Perguntas frequentes</p>
-              <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-                Antes de consultar sua rota
-              </h2>
-              <div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055]">
-                {faqs.map(([question, answer]) => (
-                  <details key={question} className="group p-5 open:bg-white/[0.04] sm:p-6">
-                    <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-white">
-                      {question}
-                    </summary>
-                    <p className="mt-4 text-sm leading-7 text-slate-300">{answer}</p>
-                  </details>
-                ))}
-              </div>
+            <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
+              <label className="grid gap-3 text-left sm:grid-cols-[140px_minmax(0,1fr)] sm:items-center">
+                <span className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Bairro</span>
+                <select
+                  value={selectedBairroId}
+                  onChange={(event) => resetAfterBairroChange(event.target.value)}
+                  className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition focus:border-cyan-300 focus:ring-4"
+                  required
+                >
+                  <option value="">Selecione seu bairro</option>
+                  {availableBairros.map((bairro) => (
+                    <option key={bairro.id} value={bairro.id}>
+                      {bairro.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
-          </section>
-        </>
+
+            <div className="max-h-[calc(100vh-13rem)] overflow-y-auto">
+              {selectedBairro ? renderConsultationForm(true) : null}
+            </div>
+          </div>
+        </div>
       ) : null}
     </main>
   );

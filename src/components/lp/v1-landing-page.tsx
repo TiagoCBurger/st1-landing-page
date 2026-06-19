@@ -91,9 +91,13 @@ export default function V1LandingPage() {
         <div className="absolute left-1/2 top-24 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full border border-cyan-300/10 bg-cyan-300/5 blur-3xl" />
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
-            <span className="grid size-11 place-items-center rounded-2xl bg-white text-lg font-black text-[#072f78] shadow-[0_0_28px_rgba(0,148,255,0.35)]">
-              ST1
-            </span>
+            <Image
+              src="/logo-ST1-03%201.png"
+              alt="ST1 Internet"
+              width={453}
+              height={327}
+              className="h-auto w-[52px] sm:w-[64px]"
+            />
             <span className="hidden text-sm font-semibold uppercase tracking-[0.22em] text-cyan-100 sm:inline">
               Internet Fibra
             </span>
@@ -113,14 +117,30 @@ export default function V1LandingPage() {
               Rota de internet fibra com o Starzinho
             </div>
             <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
-              Eu encontrei uma rota de internet fibra perto de voce.
+              Descubra se a fibra da ST1
               <span className="block bg-gradient-to-r from-cyan-200 via-white to-orange-200 bg-clip-text text-transparent">
-                Quer ver se chega na sua rua?
+                chega na sua rua.
               </span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              Sou o Starzinho, e vou te ajudar a consultar se a ST1 ja tem disponibilidade no seu bairro.
-            </p>
+            <div className="mt-6 flex max-w-2xl items-start gap-3 text-left sm:items-center">
+              <div className="relative size-16 shrink-0 overflow-hidden rounded-full border-2 border-orange-300 bg-[#07111f] shadow-[0_0_28px_rgba(255,121,31,0.28)]">
+                <Image
+                  src="/starzinho.png"
+                  alt="Starzinho"
+                  width={6000}
+                  height={7000}
+                  priority
+                  className="h-full w-full scale-[2.2] object-cover object-[50%_31%]"
+                />
+              </div>
+              <div className="relative flex-1 rounded-2xl border border-white/15 bg-white px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] before:absolute before:left-[-8px] before:top-6 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/15 before:bg-white">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#072f78]">Starzinho</p>
+                <p className="mt-1 text-base font-semibold leading-7 sm:text-lg">
+                  Informe seu bairro e sua rua para consultar a disponibilidade da ST1 e ver as ofertas disponiveis para
+                  o seu endereco.
+                </p>
+              </div>
+            </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {plans.map((plan) => (

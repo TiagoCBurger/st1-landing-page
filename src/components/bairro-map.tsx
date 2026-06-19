@@ -62,19 +62,22 @@ export default function BairroMap({
   selectedFeature,
   addressMarker,
   variant = "light",
+  size = "default",
 }: {
   selectedFeature: BairroFeature | null;
   addressMarker?: AddressMarker | null;
   variant?: "light" | "dark";
+  size?: "default" | "compact";
 }) {
   const isDark = variant === "dark";
+  const mapHeightClass = size === "compact" ? "min-h-[220px]" : "min-h-[420px]";
 
   return (
     <MapContainer
       center={defaultCenter}
       zoom={12}
       scrollWheelZoom={false}
-      className={`h-full min-h-[420px] w-full ${isDark ? "map-dark-color" : "map-low-color"}`}
+      className={`h-full ${mapHeightClass} w-full ${isDark ? "map-dark-color" : "map-low-color"}`}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
