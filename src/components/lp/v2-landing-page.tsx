@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { coverageBairros, painPoints, plans, stats } from "@/components/lp/lp-data";
+import { LpSectionDivider } from "@/components/lp/lp-section-divider";
 import { saoLuisBairrosGeoJson } from "@/data/sao-luis-bairros";
 
 const BairroMap = dynamic(() => import("@/components/bairro-map"), {
@@ -524,9 +525,10 @@ export default function V2LandingPage() {
 
   return (
       <main className="lp-animated min-h-screen overflow-hidden bg-[#050914] text-white">
-      <section className="relative isolate px-5 pb-10 pt-6 sm:px-8 lg:px-12">
-        <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.36),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,116,0,0.30),transparent_32%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
-        <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-cyan-300/10 bg-cyan-300/5 blur-3xl" />
+      <section className="relative isolate px-5 pb-0 pt-6 sm:px-8 lg:px-12">
+        <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.36),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,116,0,0.30),transparent_32%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-b from-transparent via-[#050914]/70 to-[#050914]" />
+        <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-cyan-300/10 bg-cyan-300/5 blur-3xl [mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)]" />
 
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
@@ -605,6 +607,8 @@ export default function V2LandingPage() {
             </p>
           </div>
         </div>
+
+        <LpSectionDivider className="mt-10" />
       </section>
 
       <section className="relative px-5 py-20 sm:px-8 lg:px-12">
