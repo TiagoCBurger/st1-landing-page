@@ -19,9 +19,11 @@ const BairroMap = dynamic(() => import("@/components/bairro-map"), {
 
 type Lead = {
   bairro: string;
+  cidade: string;
   rua: string;
   nome: string;
   whatsapp: string;
+  available: boolean;
 };
 
 const steps = [
@@ -71,8 +73,14 @@ const planHighlights = {
   },
 } as const;
 
+function normalizeBairroName(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
 export default function V2LandingPage() {
-  const availableBairros = coverageBairros.filter((bairro) => bairro.available);
   const consultationFormRef = useRef<HTMLDivElement | null>(null);
   const streetInputRef = useRef<HTMLInputElement | null>(null);
   const modalStreetInputRef = useRef<HTMLInputElement | null>(null);
@@ -86,11 +94,38 @@ export default function V2LandingPage() {
   const [showResults, setShowResults] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const selectedBairro = availableBairros.find((bairro) => bairro.id === selectedBairroId);
+  const selectedBairro = coverageBairros.find((bairro) => bairro.id === selectedBairroId);
   const selectedFeature = useMemo(
-    () => saoLuisBairrosGeoJson.features.find((feature) => feature.properties.id === selectedBairroId) ?? null,
-    [selectedBairroId],
+    () =>
+      saoLuisBairrosGeoJson.features.find((feature) => {
+        const selectedName = selectedBairro?.name ?? "";
+
+        return (
+          feature.properties.id === selectedBairroId ||
+          normalizeBairroName(feature.properties.name) === normalizeBairroName(selectedName)
+        );
+      }) ?? null,
+    [selectedBairro?.name, selectedBairroId],
   );
+
+  const resultCopy = lead?.available
+    ? {
+        eyebrow: "Resultado da consulta",
+        title: "Planos disponíveis para escolher agora",
+        cardTitle: "Endereço em análise",
+        cardText: `Um atendente confirma a disponibilidade final pelo WhatsApp ${lead.whatsapp}.`,
+        nextTitle: "Seu endereço já entrou na análise da ST1.",
+        nextText: `O atendimento continua pelo WhatsApp ${lead.whatsapp}. O time confirma a disponibilidade final e te ajuda a seguir com o plano ideal para sua casa.`,
+      }
+    : {
+        eyebrow: "Bairro em construção",
+        title: "Em breve disponível no seu bairro",
+        cardTitle: "Rota em construção",
+        cardText: `A ST1 ainda está construindo a rota em ${lead?.bairro}. Deixamos seu contato para avisar pelo WhatsApp ${lead?.whatsapp} quando houver disponibilidade.`,
+        nextTitle: "A ST1 ainda está chegando ao seu bairro.",
+        nextText:
+          "Enquanto a cobertura é construída, você já pode conhecer os planos residenciais. Assim que a rota estiver disponível, o atendimento avança com a confirmação do endereço.",
+      };
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -173,9 +208,11 @@ export default function V2LandingPage() {
 
     const nextLead = {
       bairro: selectedBairro.name,
+      cidade: selectedBairro.city,
       rua: rua.trim(),
       nome: nome.trim(),
       whatsapp: whatsapp.trim(),
+      available: selectedBairro.available,
     };
 
     setLead(nextLead);
@@ -320,9 +357,14 @@ export default function V2LandingPage() {
           <div className="mx-auto mt-12 max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-stretch">
               <div className="order-1 lg:col-start-1 lg:row-start-1">
-                <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Resultado da consulta</p>
+                <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">{resultCopy.eyebrow}</p>
+                {lead?.available ? (
+                  <span className="mt-5 inline-flex rounded-full border border-emerald-200/50 bg-emerald-300/15 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-emerald-100 shadow-[0_0_26px_rgba(110,231,183,0.18)]">
+                    Disponível
+                  </span>
+                ) : null}
                 <h1 className="mt-4 text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl">
-                  Planos disponíveis para escolher agora
+                  {resultCopy.title}
                 </h1>
               </div>
 
@@ -406,21 +448,26 @@ export default function V2LandingPage() {
               <div className="order-3 lg:col-start-1 lg:row-start-2">
                 <div className="lp-motion-card overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.06] lg:mt-6">
                   <div className="p-5 pb-0">
-                    <p className="text-sm font-bold text-cyan-100">Endereço em análise</p>
+                    <p className="text-sm font-bold text-cyan-100">{resultCopy.cardTitle}</p>
                     <p className="mt-2 text-lg font-black text-white">
                       {lead?.bairro}, {lead?.rua}
                     </p>
+                    {lead?.available ? (
+                      <span className="mt-3 inline-flex rounded-full bg-emerald-300 px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#042015]">
+                        Disponível
+                      </span>
+                    ) : null}
                     <p className="mt-3 text-sm leading-6 text-slate-300">
-                      Um atendente confirma a disponibilidade final pelo WhatsApp {lead?.whatsapp}.
+                      {resultCopy.cardText}
                     </p>
                   </div>
-                  <div className="relative mt-5 h-[400px] overflow-hidden sm:h-[355px]">
+                  <div className="relative mt-5 aspect-square overflow-hidden lg:aspect-auto lg:h-[355px]">
                     <Image
                       src="/starzinho no note.png"
                       alt="Starzinho acompanhando a analise do endereco"
                       fill
                       sizes="(max-width: 1024px) 100vw, 40vw"
-                      className="lp-float object-cover object-top"
+                      className="lp-float object-contain lg:object-cover lg:object-top"
                     />
                   </div>
                 </div>
@@ -511,11 +558,10 @@ export default function V2LandingPage() {
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#ff7400]/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
             <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Próximo passo</p>
             <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-              Seu endereço já entrou na análise da ST1.
+              {resultCopy.nextTitle}
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-              O atendimento continua pelo WhatsApp {lead?.whatsapp}. O time confirma a disponibilidade final e te ajuda
-              a seguir com o plano ideal para sua casa.
+              {resultCopy.nextText}
             </p>
           </div>
         </section>
@@ -575,9 +621,10 @@ export default function V2LandingPage() {
                   required
                 >
                   <option value="">Selecione seu bairro</option>
-                  {availableBairros.map((bairro) => (
+                  {coverageBairros.map((bairro) => (
                     <option key={bairro.id} value={bairro.id}>
-                      {bairro.name}
+                      {bairro.name} - {bairro.city}
+                      {!bairro.available ? " (em construção)" : ""}
                     </option>
                   ))}
                 </select>
@@ -711,9 +758,10 @@ export default function V2LandingPage() {
                   required
                 >
                   <option value="">Selecione seu bairro</option>
-                  {availableBairros.map((bairro) => (
+                  {coverageBairros.map((bairro) => (
                     <option key={bairro.id} value={bairro.id}>
-                      {bairro.name}
+                      {bairro.name} - {bairro.city}
+                      {!bairro.available ? " (em construção)" : ""}
                     </option>
                   ))}
                 </select>

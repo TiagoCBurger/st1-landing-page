@@ -203,9 +203,10 @@ export default function LpConsultaForm({
                 className="mt-2 w-full rounded-2xl border border-white/10 bg-[#071426] px-4 py-3 text-white outline-none ring-cyan-300/30 transition focus:border-cyan-300 focus:ring-4"
               >
                 {coverageBairros.map((bairro) => (
-                  <option key={bairro.id} value={bairro.id} disabled={!bairro.available}>
+                  <option key={bairro.id} value={bairro.id}>
                     {bairro.name}
-                    {!bairro.available ? " (em breve)" : ""}
+                    {bairro.city ? ` - ${bairro.city}` : ""}
+                    {!bairro.available ? " (em construção)" : ""}
                   </option>
                 ))}
               </select>
