@@ -3,7 +3,7 @@ Eu encontrei uma rota de internet fibra perto de você. Quer ver se chega na sua
 Subheadline
 Sou o Starzinho, e vou te ajudar a consultar se a ST1 já tem disponibilidade no seu bairro.
 Ofertas em destaque
-1000MB por R$ 89,90/mês
+1000MB por R$ 89,90/mêsd
  A rota de entrada para quem quer velocidade, estabilidade e ótimo custo-benefício.
 1300MB por R$ 109,90/mês
  Mais performance para casas com mais pessoas, mais dispositivos e uso intenso de internet.
