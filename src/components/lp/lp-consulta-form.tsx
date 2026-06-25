@@ -206,7 +206,6 @@ export default function LpConsultaForm({
                   <option key={bairro.id} value={bairro.id}>
                     {bairro.name}
                     {bairro.city ? ` - ${bairro.city}` : ""}
-                    {!bairro.available ? " (em construção)" : ""}
                   </option>
                 ))}
               </select>

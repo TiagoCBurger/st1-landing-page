@@ -3,10 +3,11 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { coverageBairros, painPoints, plans, stats } from "@/components/lp/lp-data";
 import { LpSectionDivider } from "@/components/lp/lp-section-divider";
-import { saoLuisBairrosGeoJson } from "@/data/sao-luis-bairros";
+import { BairroFeature, saoLuisBairrosGeoJson } from "@/data/sao-luis-bairros";
 
 const BairroMap = dynamic(() => import("@/components/bairro-map"), {
   ssr: false,
@@ -73,6 +74,13 @@ const planHighlights = {
   },
 } as const;
 
+type BairroDropdownPosition = {
+  left: number;
+  top: number;
+  width: number;
+  maxHeight: number;
+};
+
 function normalizeBairroName(value: string) {
   return value
     .normalize("NFD")
@@ -80,32 +88,168 @@ function normalizeBairroName(value: string) {
     .toLowerCase();
 }
 
+function normalizeSearchText(value: string) {
+  return normalizeBairroName(value)
+    .replace(/[’']/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function slugifyBairroName(value: string) {
+  return normalizeBairroName(value)
+    .replace(/[’']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function hashString(value: string) {
+  return [...value].reduce((hash, character) => (hash * 31 + character.charCodeAt(0)) >>> 0, 0);
+}
+
+function getApproximateBairroCentroid(name: string, city: string): [number, number] {
+  const normalizedName = normalizeBairroName(name);
+  const normalizedCity = normalizeBairroName(city);
+
+  const anchors: Array<[string[], [number, number]]> = [
+    [["anjo da guarda", "fumace", "vila embratel", "mauro fecury", "vila nova", "paraiso"], [-44.327, -2.565]],
+    [["coroadinho", "bom jesus", "vila conceicao", "vila dos nobres"], [-44.285, -2.56]],
+    [["tirirical", "sao cristovao", "jardim sao cristovao", "sao raimundo", "santa efigenia"], [-44.228, -2.575]],
+    [["forquilha", "cohab", "cohatrac", "maioba", "maiobinha", "jardim america"], [-44.205, -2.545]],
+    [["anil", "joao de deus", "cruzeiro do anil", "aurora", "pirapora"], [-44.24, -2.555]],
+    [["turu", "olho dagua", "divineia", "vila luizao", "aracagy", "vicente fialho"], [-44.215, -2.505]],
+    [["cohama", "bequimao", "vinhais", "maranhao novo", "cohafuma", "angelim"], [-44.255, -2.515]],
+    [["calhau", "renascenca", "sao francisco", "ilhinha", "ponta do farol"], [-44.285, -2.5]],
+    [["liberdade", "camboa", "monte castelo", "fatima", "areinha", "fe em deus"], [-44.293, -2.54]],
+    [["cidade olimpica", "cidade operaria", "geniparana", "jardim tropical"], [-44.17, -2.575]],
+    [["maracana", "tibiri", "vila esperanca"], [-44.22, -2.63]],
+  ];
+
+  const matchedAnchor = anchors.find(([keywords]) => keywords.some((keyword) => normalizedName.includes(keyword)))?.[1];
+
+  const cityAnchor =
+    matchedAnchor ??
+    (normalizedCity.includes("raposa")
+      ? ([-44.105, -2.425] as [number, number])
+      : normalizedCity.includes("paco")
+        ? ([-44.13, -2.525] as [number, number])
+        : normalizedCity.includes("ribamar")
+          ? ([-44.075, -2.56] as [number, number])
+          : ([-44.245, -2.535] as [number, number]));
+
+  const hash = hashString(`${name}-${city}`);
+  const lngOffset = (((hash % 17) - 8) / 1000) * 1.8;
+  const latOffset = ((((hash >>> 5) % 17) - 8) / 1000) * 1.8;
+
+  return [cityAnchor[0] + lngOffset, cityAnchor[1] + latOffset];
+}
+
+function createApproximateBairroFeature({
+  id,
+  name,
+  city,
+}: {
+  id: string;
+  name: string;
+  city: string;
+}): BairroFeature {
+  const centroid = getApproximateBairroCentroid(name, city);
+  const [lng, lat] = centroid;
+  const radiusKm = 1.15;
+  const lngDelta = 0.012;
+  const latDelta = 0.010;
+
+  return {
+    type: "Feature",
+    properties: {
+      id,
+      name,
+      zone: city,
+      postalCode: "São Luís e região",
+      centroid,
+      radiusKm,
+    },
+    geometry: {
+      type: "Polygon",
+      coordinates: [[
+        [lng - lngDelta, lat - latDelta],
+        [lng + lngDelta, lat - latDelta],
+        [lng + lngDelta, lat + latDelta],
+        [lng - lngDelta, lat + latDelta],
+        [lng - lngDelta, lat - latDelta],
+      ]],
+    },
+  };
+}
+
 export default function V2LandingPage() {
   const consultationFormRef = useRef<HTMLDivElement | null>(null);
   const streetInputRef = useRef<HTMLInputElement | null>(null);
   const modalStreetInputRef = useRef<HTMLInputElement | null>(null);
+  const bairroPickerRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const bairroDropdownRef = useRef<HTMLDivElement | null>(null);
   const [selectedBairroId, setSelectedBairroId] = useState("");
+  const [bairroSearch, setBairroSearch] = useState("");
+  const [isBairroPickerOpen, setIsBairroPickerOpen] = useState(false);
+  const [activeBairroPickerId, setActiveBairroPickerId] = useState<string | null>(null);
+  const [bairroDropdownPosition, setBairroDropdownPosition] = useState<BairroDropdownPosition | null>(null);
   const [rua, setRua] = useState("");
   const [nome, setNome] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [lead, setLead] = useState<Lead | null>(null);
   const [status, setStatus] = useState("");
   const [isLoadingCoverage, setIsLoadingCoverage] = useState(false);
+  const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const orderedBairros = useMemo(
+    () =>
+      [...coverageBairros].sort(
+        (first, second) =>
+          first.name.localeCompare(second.name, "pt-BR", { sensitivity: "base" }) ||
+          first.city.localeCompare(second.city, "pt-BR", { sensitivity: "base" }),
+      ),
+    [],
+  );
+  const filteredBairros = useMemo(() => {
+    const query = normalizeSearchText(bairroSearch);
+
+    if (!query) {
+      return orderedBairros;
+    }
+
+    const queryTerms = query.split(/\s+/).filter(Boolean);
+
+    return orderedBairros.filter((bairro) => {
+      const searchableText = normalizeSearchText(`${bairro.name} ${bairro.city}`);
+
+      return queryTerms.every((term) => searchableText.includes(term));
+    });
+  }, [bairroSearch, orderedBairros]);
   const selectedBairro = coverageBairros.find((bairro) => bairro.id === selectedBairroId);
   const selectedFeature = useMemo(
-    () =>
-      saoLuisBairrosGeoJson.features.find((feature) => {
+    () => {
+      if (!selectedBairro) {
+        return null;
+      }
+
+      const matchedFeature = saoLuisBairrosGeoJson.features.find((feature) => {
         const selectedName = selectedBairro?.name ?? "";
+        const selectedSlug = slugifyBairroName(selectedName);
+        const featureSlug = slugifyBairroName(feature.properties.name);
 
         return (
           feature.properties.id === selectedBairroId ||
-          normalizeBairroName(feature.properties.name) === normalizeBairroName(selectedName)
+          feature.properties.id === selectedSlug ||
+          featureSlug === selectedSlug ||
+          selectedSlug.startsWith(`${feature.properties.id}-`) ||
+          selectedSlug.startsWith(`${featureSlug}-`)
         );
-      }) ?? null,
-    [selectedBairro?.name, selectedBairroId],
+      });
+
+      return matchedFeature ?? createApproximateBairroFeature(selectedBairro);
+    },
+    [selectedBairro, selectedBairroId],
   );
 
   const resultCopy = lead?.available
@@ -126,6 +270,46 @@ export default function V2LandingPage() {
         nextText:
           "Enquanto a cobertura é construída, você já pode conhecer os planos residenciais. Assim que a rota estiver disponível, o atendimento avança com a confirmação do endereço.",
       };
+
+  function updateBairroDropdownPosition(pickerId: string) {
+    const picker = bairroPickerRefs.current[pickerId];
+
+    if (!picker) {
+      return;
+    }
+
+    const rect = picker.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    const gap = 8;
+    const viewportPadding = 12;
+    const availableBelow = viewportHeight - rect.bottom - viewportPadding;
+    const availableAbove = rect.top - viewportPadding;
+    const shouldOpenAbove = availableBelow < 260 && availableAbove > availableBelow;
+    const availableHeight = shouldOpenAbove ? availableAbove : availableBelow;
+    const maxHeight = Math.max(220, Math.min(380, availableHeight - gap));
+    const width = Math.min(rect.width, viewportWidth - viewportPadding * 2);
+    const left = Math.min(Math.max(rect.left, viewportPadding), viewportWidth - width - viewportPadding);
+    const top = shouldOpenAbove
+      ? Math.max(viewportPadding, rect.top - maxHeight - gap)
+      : Math.min(rect.bottom + gap, viewportHeight - maxHeight - viewportPadding);
+
+    setBairroDropdownPosition({
+      left,
+      top,
+      width,
+      maxHeight,
+    });
+  }
+
+  function openBairroPicker(pickerId: string) {
+    setActiveBairroPickerId(pickerId);
+    setIsBairroPickerOpen(true);
+
+    window.requestAnimationFrame(() => {
+      updateBairroDropdownPosition(pickerId);
+    });
+  }
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -152,6 +336,45 @@ export default function V2LandingPage() {
     };
   }, [isModalOpen]);
 
+  useEffect(() => {
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target as Node;
+      const clickedPicker = Object.values(bairroPickerRefs.current).some((element) => element?.contains(target));
+      const clickedDropdown = bairroDropdownRef.current?.contains(target);
+
+      if (!clickedPicker && !clickedDropdown) {
+        setIsBairroPickerOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isBairroPickerOpen || !activeBairroPickerId) {
+      return;
+    }
+
+    const pickerId = activeBairroPickerId;
+
+    function handleViewportChange() {
+      updateBairroDropdownPosition(pickerId);
+    }
+
+    handleViewportChange();
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, true);
+
+    return () => {
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange, true);
+    };
+  }, [activeBairroPickerId, isBairroPickerOpen]);
+
   function openConsultationModal() {
     setStatus("");
     setIsModalOpen(true);
@@ -165,6 +388,7 @@ export default function V2LandingPage() {
     setLead(null);
     setStatus("");
     setIsLoadingCoverage(false);
+    setIsSubmittingLead(false);
     setShowResults(false);
 
     if (!bairroId) {
@@ -183,8 +407,20 @@ export default function V2LandingPage() {
     }, 0);
   }
 
-  function handleAvailabilitySubmit(event: FormEvent<HTMLFormElement>) {
+  function selectBairro(bairroId: string) {
+    const bairro = coverageBairros.find((item) => item.id === bairroId);
+
+    setBairroSearch(bairro ? `${bairro.name} - ${bairro.city}` : "");
+    setIsBairroPickerOpen(false);
+    resetAfterBairroChange(bairroId);
+  }
+
+  async function handleAvailabilitySubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (isSubmittingLead) {
+      return;
+    }
 
     if (!selectedBairro) {
       setStatus("Selecione um bairro para continuar.");
@@ -215,17 +451,40 @@ export default function V2LandingPage() {
       available: selectedBairro.available,
     };
 
-    setLead(nextLead);
-    setIsLoadingCoverage(true);
-    setShowResults(false);
+    setIsSubmittingLead(true);
     setStatus("");
 
-    window.setTimeout(() => {
-      setIsLoadingCoverage(false);
-      setIsModalOpen(false);
-      setShowResults(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 1200);
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...nextLead,
+          source: "lp-v2",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Lead submission failed");
+      }
+
+      setLead(nextLead);
+      setIsLoadingCoverage(true);
+      setShowResults(false);
+
+      window.setTimeout(() => {
+        setIsLoadingCoverage(false);
+        setIsModalOpen(false);
+        setShowResults(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 1200);
+    } catch {
+      setStatus("Não consegui enviar seus dados agora. Tente novamente em instantes.");
+    } finally {
+      setIsSubmittingLead(false);
+    }
   }
 
   function renderConsultationForm(isModal = false) {
@@ -254,6 +513,7 @@ export default function V2LandingPage() {
           <label className="block">
             <span className="text-sm font-bold text-cyan-100">Rua</span>
             <input
+              name="rua"
               ref={isModal ? modalStreetInputRef : streetInputRef}
               value={rua}
               onChange={(event) => {
@@ -271,6 +531,7 @@ export default function V2LandingPage() {
             <label className="block">
               <span className="text-sm font-bold text-cyan-100">Nome</span>
               <input
+                name="nome"
                 value={nome}
                 onChange={(event) => {
                   setNome(event.target.value);
@@ -285,6 +546,7 @@ export default function V2LandingPage() {
             <label className="block">
               <span className="text-sm font-bold text-cyan-100">WhatsApp</span>
               <input
+                name="whatsapp"
                 value={whatsapp}
                 onChange={(event) => {
                   setWhatsapp(event.target.value);
@@ -302,12 +564,157 @@ export default function V2LandingPage() {
 
           <button
             type="submit"
+            disabled={isSubmittingLead}
             className="w-full rounded-2xl bg-[#ff7400] px-6 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,116,0,0.28)] transition hover:-translate-y-0.5"
           >
-            Verificar disponibilidade
+            {isSubmittingLead ? "Enviando consulta..." : "Verificar disponibilidade"}
           </button>
         </div>
       </form>
+    );
+  }
+
+  function renderBairroPicker(pickerId: string) {
+    const isCurrentPickerOpen = isBairroPickerOpen && activeBairroPickerId === pickerId;
+
+    return (
+      <div className="relative z-40 grid gap-3 text-left sm:grid-cols-[140px_minmax(0,1fr)] sm:items-start">
+        <span className="pt-1 text-sm font-black uppercase tracking-[0.2em] text-cyan-100 sm:pt-4">Bairro</span>
+        <div
+          ref={(element) => {
+            bairroPickerRefs.current[pickerId] = element;
+          }}
+          className="relative"
+        >
+          <div className="relative">
+            <input
+              type="search"
+              role="combobox"
+              aria-expanded={isCurrentPickerOpen}
+              aria-controls={`${pickerId}-options`}
+              aria-autocomplete="list"
+              value={bairroSearch}
+              onFocus={() => openBairroPicker(pickerId)}
+              onChange={(event) => {
+                setBairroSearch(event.target.value);
+                openBairroPicker(pickerId);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setIsBairroPickerOpen(false);
+                  return;
+                }
+
+                if (event.key === "Enter" && filteredBairros[0]) {
+                  event.preventDefault();
+                  selectBairro(filteredBairros[0].id);
+                }
+              }}
+              placeholder="Digite para buscar seu bairro"
+              className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 pr-24 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+            />
+            {bairroSearch ? (
+              <button
+                type="button"
+                aria-label="Limpar busca de bairro"
+                onClick={() => {
+                  setBairroSearch("");
+                  setSelectedBairroId("");
+                  setRua("");
+                  setNome("");
+                  setWhatsapp("");
+                  setLead(null);
+                  setStatus("");
+                  setShowResults(false);
+                  openBairroPicker(pickerId);
+                }}
+                className="absolute right-12 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-cyan-100 transition hover:bg-white/10"
+              >
+                <span className="text-lg leading-none">×</span>
+              </button>
+            ) : null}
+            <button
+              type="button"
+              aria-label={isCurrentPickerOpen ? "Fechar bairros" : "Abrir bairros"}
+              onClick={() => {
+                if (isCurrentPickerOpen) {
+                  setIsBairroPickerOpen(false);
+                  return;
+                }
+
+                openBairroPicker(pickerId);
+              }}
+              className="absolute right-3 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-cyan-100 transition hover:bg-white/10"
+            >
+              <span className={`h-2 w-2 rotate-45 border-b-2 border-r-2 transition ${isCurrentPickerOpen ? "rotate-[225deg]" : ""}`} />
+            </button>
+          </div>
+
+          {isCurrentPickerOpen && bairroDropdownPosition && typeof document !== "undefined"
+            ? createPortal(
+                <div
+                  ref={bairroDropdownRef}
+                  id={`${pickerId}-options`}
+                  role="listbox"
+                  style={{
+                    left: bairroDropdownPosition.left,
+                    top: bairroDropdownPosition.top,
+                    width: bairroDropdownPosition.width,
+                    maxHeight: bairroDropdownPosition.maxHeight,
+                    WebkitOverflowScrolling: "touch",
+                  }}
+                  className="fixed z-[9999] overflow-y-auto overscroll-contain rounded-2xl border border-cyan-200/20 bg-[#050914] p-2 shadow-[0_30px_90px_rgba(0,0,0,0.72)] ring-1 ring-white/10"
+                >
+                  <div className="sticky top-0 z-10 mb-1 border-b border-white/10 bg-[#050914]/95 px-3 py-2 backdrop-blur">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-cyan-100">
+                      {filteredBairros.length === 1 ? "1 bairro encontrado" : `${filteredBairros.length} bairros encontrados`}
+                    </p>
+                  </div>
+                  {filteredBairros.length > 0 ? (
+                    <div className="grid gap-1">
+                      {filteredBairros.map((bairro) => {
+                        const isSelected = bairro.id === selectedBairroId;
+
+                        return (
+                          <button
+                            key={bairro.id}
+                            type="button"
+                            role="option"
+                            aria-selected={isSelected}
+                            onClick={() => selectBairro(bairro.id)}
+                            className={`w-full rounded-xl px-3 py-3 text-left transition active:scale-[0.99] ${
+                              isSelected
+                                ? "bg-cyan-300 text-[#04101f] shadow-[0_0_22px_rgba(103,232,249,0.20)]"
+                                : "text-slate-100 hover:bg-cyan-300/10 hover:text-white"
+                            }`}
+                          >
+                            <span className="flex items-center justify-between gap-3">
+                              <span className="min-w-0">
+                                <span className="block truncate text-sm font-black">{bairro.name}</span>
+                                <span
+                                  className={`mt-1 block truncate text-xs ${
+                                    isSelected ? "text-[#04101f]/70" : "text-cyan-100/70"
+                                  }`}
+                                >
+                                  {bairro.city}
+                                </span>
+                              </span>
+                              {isSelected ? <span className="text-sm font-black">Selecionado</span> : null}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="px-3 py-4 text-sm font-bold text-[#ff7400]">Nenhum bairro encontrado.</p>
+                  )}
+                </div>,
+                document.body,
+              )
+            : null}
+
+        </div>
+      </div>
     );
   }
 
@@ -338,7 +745,7 @@ export default function V2LandingPage() {
                 alt="ST1 Internet"
                 width={453}
                 height={327}
-                className="h-auto w-[50px] sm:w-[58px]"
+                className="h-auto w-[58px] sm:w-[68px]"
               />
             </a>
             <button
@@ -583,7 +990,7 @@ export default function V2LandingPage() {
               alt="ST1 Internet"
               width={453}
               height={327}
-              className="h-auto w-[50px] sm:w-[58px]"
+              className="h-auto w-[58px] sm:w-[68px]"
             />
           </a>
           <button
@@ -598,7 +1005,7 @@ export default function V2LandingPage() {
         <div id="topo" className="mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100">
             <span className="lp-pulse-dot size-2 rounded-full bg-[#ff7400] shadow-[0_0_18px_#ff7400]" />
-            Internet Fibra Ótica em São Luiz
+            Internet Fibra Ótica em São Luiz e Região
           </div>
 
           <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
@@ -610,25 +1017,9 @@ export default function V2LandingPage() {
         </div>
 
         <div id="consulta" ref={consultationFormRef} className="mx-auto mt-10 max-w-5xl">
-          <div className="lp-motion-card overflow-hidden rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
+          <div className="lp-motion-card overflow-visible rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
             <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
-              <label className="grid gap-3 text-left sm:grid-cols-[140px_minmax(0,1fr)] sm:items-center">
-                <span className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Bairro</span>
-                <select
-                  value={selectedBairroId}
-                  onChange={(event) => resetAfterBairroChange(event.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition focus:border-cyan-300 focus:ring-4"
-                  required
-                >
-                  <option value="">Selecione seu bairro</option>
-                  {coverageBairros.map((bairro) => (
-                    <option key={bairro.id} value={bairro.id}>
-                      {bairro.name} - {bairro.city}
-                      {!bairro.available ? " (em construção)" : ""}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              {renderBairroPicker("bairro-picker-main")}
             </div>
 
             {selectedBairro ? renderConsultationForm() : null}
@@ -733,7 +1124,7 @@ export default function V2LandingPage() {
             aria-hidden="true"
             onClick={() => setIsModalOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/12 bg-[#07111f]/95 shadow-[0_24px_90px_rgba(0,0,0,0.55)]">
+          <div className="relative z-10 w-full max-w-5xl overflow-visible rounded-[2rem] border border-white/12 bg-[#07111f]/95 shadow-[0_24px_90px_rgba(0,0,0,0.55)]">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-6">
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.18em] text-cyan-100">Consulta de cobertura</p>
@@ -749,23 +1140,7 @@ export default function V2LandingPage() {
             </div>
 
             <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
-              <label className="grid gap-3 text-left sm:grid-cols-[140px_minmax(0,1fr)] sm:items-center">
-                <span className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Bairro</span>
-                <select
-                  value={selectedBairroId}
-                  onChange={(event) => resetAfterBairroChange(event.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition focus:border-cyan-300 focus:ring-4"
-                  required
-                >
-                  <option value="">Selecione seu bairro</option>
-                  {coverageBairros.map((bairro) => (
-                    <option key={bairro.id} value={bairro.id}>
-                      {bairro.name} - {bairro.city}
-                      {!bairro.available ? " (em construção)" : ""}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              {renderBairroPicker("bairro-picker-modal")}
             </div>
 
             <div className="max-h-[calc(100vh-13rem)] overflow-y-auto">
