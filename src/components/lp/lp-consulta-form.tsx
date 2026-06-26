@@ -154,7 +154,7 @@ export default function LpConsultaForm({
         {step === "address" ? (
           <>
             <p className="text-lg font-black tracking-[-0.03em] text-white">
-              Opa, encontrei uma possivel rota perto de voce.
+              Opa, encontrei uma possível rota perto de você.
             </p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
               Busque seu endereço exato. Quando você selecionar um resultado, eu marco o ponto no mapa.
@@ -177,7 +177,7 @@ export default function LpConsultaForm({
           <>
             <p className="text-lg font-black tracking-[-0.03em] text-white">Consulta iniciada.</p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Separei as opcoes residenciais abaixo. A disponibilidade final ainda depende da confirmacao tecnica da sua rua.
+              Separei as opções residenciais abaixo. A disponibilidade final ainda depende da confirmação técnica da sua rua.
             </p>
           </>
         ) : null}
@@ -267,7 +267,7 @@ export default function LpConsultaForm({
         {step === "contact" ? (
           <>
             <div className="rounded-2xl border border-cyan-200/15 bg-cyan-300/10 p-4">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">Endereco em consulta</p>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-100">Endereço em consulta</p>
               <p className="mt-1 text-sm font-bold text-white">
                 {selectedBairro?.name ?? bairroValue} • {selectedAddress?.label ?? addressQuery}
               </p>
@@ -321,13 +321,13 @@ export default function LpConsultaForm({
             href="#planos"
             className="inline-flex w-full justify-center rounded-2xl bg-cyan-300 px-5 py-4 text-base font-black text-[#04101f] shadow-[0_0_34px_rgba(103,232,249,0.22)] transition hover:-translate-y-0.5"
           >
-            Ver planos disponiveis
+            Ver planos disponíveis
           </a>
         ) : null}
       </form>
 
       <p className="mt-4 text-center text-xs leading-5 text-slate-400">
-        O plano nao precisa ser escolhido agora. Primeiro validamos a rota da sua rua.
+        O plano não precisa ser escolhido agora. Primeiro validamos a rota da sua rua.
       </p>
     </div>
   );

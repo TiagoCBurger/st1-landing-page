@@ -2,85 +2,85 @@ import Image from "next/image";
 
 const painPoints = [
   {
-    title: "Reuniao travando",
-    text: "Mais estabilidade para trabalhar em casa sem interrupcoes.",
+    title: "Reunião travando",
+    text: "Mais estabilidade para trabalhar em casa sem interrupções.",
   },
   {
-    title: "Video carregando toda hora",
-    text: "Assista seus conteudos com mais fluidez, sem depender de uma conexao instavel.",
+    title: "Vídeo carregando toda hora",
+    text: "Assista seus conteúdos com mais fluidez, sem depender de uma conexão instável.",
   },
   {
     title: "Jogo com lag",
-    text: "Conexao mais estavel para jogar online com menos dor de cabeca.",
+    text: "Conexão mais estável para jogar online com menos dor de cabeça.",
   },
   {
-    title: "Wi-Fi fraco nos comodos",
-    text: "Mais performance para casas com varios aparelhos conectados ao mesmo tempo.",
+    title: "Wi-Fi fraco nos cômodos",
+    text: "Mais performance para casas com vários aparelhos conectados ao mesmo tempo.",
   },
   {
     title: "Internet caindo no pior momento",
-    text: "Sua rotina precisa de uma conexao confiavel quando voce mais precisa.",
+    text: "Sua rotina precisa de uma conexão confiável quando você mais precisa.",
   },
 ];
 
 const plans = [
   {
     name: "1000MB",
-    price: "R$ 89,90/mes",
+    price: "R$ 89,90/mês",
     label: "Rota principal",
     description:
-      "Uma opcao para quem quer internet fibra rapida, estavel e com otimo custo-beneficio para navegar, trabalhar, estudar, assistir e jogar.",
-    features: ["Fibra optica", "Conexao estavel", "Wi-Fi 6", "Suporte tecnico", "Otimo custo-beneficio"],
+      "Uma opção para quem quer internet fibra rápida, estável e com ótimo custo-benefício para navegar, trabalhar, estudar, assistir e jogar.",
+    features: ["Fibra óptica", "Conexão estável", "Wi-Fi 6", "Suporte técnico", "Ótimo custo-benefício"],
   },
   {
     name: "1300MB",
-    price: "R$ 109,90/mes",
+    price: "R$ 109,90/mês",
     label: "Mais performance",
     description:
-      "Uma opcao para quem quer mais velocidade e mais performance para uma rotina com mais pessoas, mais dispositivos conectados e maior consumo de internet.",
-    features: ["Mais velocidade", "Mais performance", "Fibra optica", "Wi-Fi 6", "Suporte tecnico"],
+      "Uma opção para quem quer mais velocidade e mais performance para uma rotina com mais pessoas, mais dispositivos conectados e maior consumo de internet.",
+    features: ["Mais velocidade", "Mais performance", "Fibra óptica", "Wi-Fi 6", "Suporte técnico"],
   },
 ];
 
 const steps = [
-  ["Informe seu bairro", "Escolha uma das regioes com viabilidade no formulario."],
+  ["Informe seu bairro", "Escolha uma das regiões com viabilidade no formulário."],
   ["Digite sua rua", "Com sua rua, conseguimos consultar melhor a disponibilidade."],
   ["O Starzinho te guia", "Depois da consulta, o atendimento segue pelo WhatsApp."],
-  ["A ST1 confirma", "O time verifica se a instalacao pode avancar no seu endereco."],
-  ["Orientacao do plano ideal", "O atendimento te ajuda a seguir com a melhor opcao."],
-  ["Instalacao", "Se houver disponibilidade, voce recebe os proximos passos para ativacao."],
+  ["A ST1 confirma", "O time verifica se a instalação pode avançar no seu endereço."],
+  ["Orientação do plano ideal", "O atendimento te ajuda a seguir com a melhor opção."],
+  ["Instalação", "Se houver disponibilidade, você recebe os próximos passos para ativação."],
 ];
 
 const stats = [
   ["Milhares de clientes conectados", "Estrutura preparada para atender rotinas residenciais cada vez mais digitais."],
-  ["Rede em expansao", "Novas rotas de cobertura podem ser liberadas conforme a viabilidade tecnica."],
-  ["Atendimento proximo", "O atendimento segue pelo WhatsApp com contexto sobre sua localizacao."],
+  ["Rede em expansão", "Novas rotas de cobertura podem ser liberadas conforme a viabilidade técnica."],
+  ["Atendimento próximo", "O atendimento segue pelo WhatsApp com contexto sobre sua localização."],
   ["Fibra para o dia a dia", "Internet para trabalhar, estudar, assistir, jogar e manter a casa conectada."],
 ];
 
 const faqs = [
   [
     "A ST1 atende qualquer rua do bairro?",
-    "Nao necessariamente. A disponibilidade pode variar por rua e endereco. Por isso, pedimos bairro e rua para consultar a viabilidade antes do proximo passo.",
+    "Não necessariamente. A disponibilidade pode variar por rua e endereço. Por isso, pedimos bairro e rua para consultar a viabilidade antes do próximo passo.",
   ],
   [
     "Por que preciso informar minha rua?",
-    "Porque a cobertura depende da rota de fibra disponivel na regiao. Com sua rua, o time consegue verificar se a instalacao pode avancar no seu endereco.",
+    "Porque a cobertura depende da rota de fibra disponível na região. Com sua rua, o time consegue verificar se a instalação pode avançar no seu endereço.",
   ],
   [
     "Preciso escolher o plano agora?",
-    "Nao. Primeiro, voce consulta se a ST1 chega ate sua rua. Depois, o atendimento te ajuda a entender se o plano de 1000MB ou 1300MB combina melhor com sua rotina.",
+    "Não. Primeiro, você consulta se a ST1 chega até sua rua. Depois, o atendimento te ajuda a entender se o plano de 1000MB ou 1300MB combina melhor com sua rotina.",
   ],
   [
-    "Quais planos residenciais estao disponiveis?",
-    "A LP apresenta duas opcoes residenciais: 1000MB por R$ 89,90/mes e 1300MB por R$ 109,90/mes. A disponibilidade deve ser confirmada conforme a regiao.",
+    "Quais planos residenciais estão disponíveis?",
+    "A LP apresenta duas opções residenciais: 1000MB por R$ 89,90/mês e 1300MB por R$ 109,90/mês. A disponibilidade deve ser confirmada conforme a região.",
   ],
   [
-    "A ST1 usa fibra optica?",
-    "Sim. A comunicacao da ST1 reforca internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
+    "A ST1 usa fibra óptica?",
+    "Sim. A comunicação da ST1 reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
   ],
   ["O atendimento continua por onde?", "Depois do envio dos dados, o atendimento segue pelo WhatsApp."],
-  ["O formulario tem custo ou compromisso?", "Nao. O formulario serve para iniciar a consulta de disponibilidade."],
+  ["O formulário tem custo ou compromisso?", "Não. O formulário serve para iniciar a consulta de disponibilidade."],
 ];
 
 export default function V1LandingPage() {
@@ -136,8 +136,8 @@ export default function V1LandingPage() {
               <div className="relative flex-1 rounded-2xl border border-white/15 bg-white px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] before:absolute before:left-[-8px] before:top-6 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/15 before:bg-white">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-[#072f78]">Starzinho</p>
                 <p className="mt-1 text-base font-semibold leading-7 sm:text-lg">
-                  Informe seu bairro e sua rua para consultar a disponibilidade da ST1 e ver as ofertas disponiveis para
-                  o seu endereco.
+                  Informe seu bairro e sua rua para consultar a disponibilidade da ST1 e ver as ofertas disponíveis para
+                  o seu endereço.
                 </p>
               </div>
             </div>
@@ -236,12 +236,12 @@ export default function V1LandingPage() {
       <section className="relative px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Chega de conexao instavel</p>
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Chega de conexão instável</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
               Chega de internet travando no meio da sua rotina!
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-300">
-              Trabalhar, estudar, jogar ou assistir nao deveria depender de uma conexao instavel.
+              Trabalhar, estudar, jogar ou assistir não deveria depender de uma conexão instável.
             </p>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -304,7 +304,7 @@ export default function V1LandingPage() {
             Como funciona a consulta com o Starzinho
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Em poucos passos, voce descobre se a ST1 ja pode chegar ate sua rua.
+            Em poucos passos, você descobre se a ST1 já pode chegar até sua rua.
           </p>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {steps.map(([title, text], index) => (
@@ -318,7 +318,7 @@ export default function V1LandingPage() {
             ))}
           </div>
           <a href="#consulta" className="mt-8 inline-flex rounded-full bg-[#ff7400] px-6 py-3 font-black text-[#130905] transition hover:-translate-y-0.5">
-            Comecar consulta agora
+            Começar consulta agora
           </a>
         </div>
       </section>
@@ -326,12 +326,12 @@ export default function V1LandingPage() {
       <section className="px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">ST1 no Maranhao</p>
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">ST1 no Maranhão</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-              A ST1 ja conecta milhares de pessoas no Maranhao
+              A ST1 já conecta milhares de pessoas no Maranhão
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-300">
-              Uma rede em expansao, feita para entregar mais velocidade e estabilidade para a rotina dos clientes.
+              Uma rede em expansão, feita para entregar mais velocidade e estabilidade para a rotina dos clientes.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -365,7 +365,7 @@ export default function V1LandingPage() {
       <section className="px-5 pb-20 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#ff7400]/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
           <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-            Quer saber se essa rota chega ate sua rua?
+            Quer saber se essa rota chega até sua rua?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
             Informe seu bairro e sua rua para consultar a disponibilidade da ST1 pelo WhatsApp.

@@ -30,10 +30,10 @@ export const saoLuisBairrosGeoJson: BairroFeatureCollection = {
   type: "FeatureCollection",
   name: "sao-luis-bairros",
   properties: {
-    city: "Sao Luis",
-    state: "Maranhao",
+    city: "São Luís",
+    state: "Maranhão",
     country: "Brasil",
-    note: "Poligonos aproximados para uso funcional em formulario e mapa. Substitua por limites oficiais quando disponiveis.",
+    note: "Polígonos aproximados para uso funcional em formulário e mapa. Substitua por limites oficiais quando disponíveis.",
   },
   features: [
     {
@@ -41,7 +41,7 @@ export const saoLuisBairrosGeoJson: BairroFeatureCollection = {
       properties: {
         id: "centro",
         name: "Centro",
-        zone: "Centro Historico",
+        zone: "Centro Histórico",
         postalCode: "65015-310",
         centroid: [-44.2991183, -2.5318416],
         radiusKm: 1.2,
@@ -103,7 +103,7 @@ export const saoLuisBairrosGeoJson: BairroFeatureCollection = {
       type: "Feature",
       properties: {
         id: "sao-francisco",
-        name: "Sao Francisco",
+        name: "São Francisco",
         zone: "Area Nobre",
         postalCode: "65076-250",
         centroid: [-44.3040792, -2.511897],

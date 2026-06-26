@@ -28,12 +28,12 @@ type Lead = {
 };
 
 const steps = [
-  ["Informe seu bairro", "Escolha uma das regioes com viabilidade no formulario."],
+  ["Informe seu bairro", "Escolha uma das regiões com viabilidade no formulário."],
   ["Digite sua rua", "Com sua rua, conseguimos consultar melhor a disponibilidade."],
   ["O Starzinho te guia", "Depois da consulta, o atendimento segue pelo WhatsApp."],
-  ["A ST1 confirma", "O time verifica se a instalacao pode avancar no seu endereco."],
-  ["Orientacao do plano ideal", "O atendimento te ajuda a seguir com a melhor opcao."],
-  ["Instalacao", "Se houver disponibilidade, voce recebe os proximos passos para ativacao."],
+  ["A ST1 confirma", "O time verifica se a instalação pode avançar no seu endereço."],
+  ["Orientação do plano ideal", "O atendimento te ajuda a seguir com a melhor opção."],
+  ["Instalação", "Se houver disponibilidade, você recebe os próximos passos para ativação."],
 ];
 
 const purchaseFaqs = [
@@ -73,6 +73,76 @@ const planHighlights = {
     popular: true,
   },
 } as const;
+
+const streamingHighlights = ["4K HDR", "Áudio imersivo", "Zero delay", "Multi-device"] as const;
+
+const streamingPlatforms = ["NETFLIX", "prime video", "Disney+", "MAX", "Globoplay", "YouTube", "STAR+"] as const;
+
+const landingMenuItems = [
+  { href: "#topo", label: "Início" },
+  { href: "#consulta", label: "Consulta" },
+  { href: "#streaming", label: "Streaming" },
+  { href: "#st1", label: "ST1" },
+  { href: "#duvidas", label: "Dúvidas" },
+] as const;
+
+const resultMenuItems = [
+  { href: "#topo", label: "Início" },
+  { href: "#planos", label: "Planos" },
+  { href: "#proximos-passos", label: "Próximo passo" },
+] as const;
+
+function PainPointIcon({ title }: { title: string }) {
+  const iconClassName = "size-6";
+
+  switch (title) {
+    case "Reunião travando":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="4" y="5" width="16" height="11" rx="2" />
+          <path d="M8 20h8" />
+          <path d="M12 16v4" />
+          <path d="M8 9h.01" />
+          <path d="M12 9h.01" />
+          <path d="M16 9h.01" />
+        </svg>
+      );
+    case "Vídeo carregando toda hora":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="3" />
+          <path d="m10 9 5 3-5 3V9z" />
+          <path d="M6 3v2" />
+          <path d="M18 3v2" />
+        </svg>
+      );
+    case "Jogo com lag":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 12h4" />
+          <path d="M8 10v4" />
+          <path d="M15 13h.01" />
+          <path d="M18 11h.01" />
+          <path d="M7 18h10a4 4 0 0 0 3.8-5.25l-1.2-3.7A4 4 0 0 0 15.8 6H8.2a4 4 0 0 0-3.8 3.05l-1.2 3.7A4 4 0 0 0 7 18Z" />
+        </svg>
+      );
+    case "Wi-Fi fraco nos cômodos":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 13a10 10 0 0 1 14 0" />
+          <path d="M8.5 16.5a5 5 0 0 1 7 0" />
+          <path d="M12 20h.01" />
+          <path d="M3 9a14 14 0 0 1 18 0" />
+        </svg>
+      );
+    default:
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
+        </svg>
+      );
+  }
+}
 
 type BairroDropdownPosition = {
   left: number;
@@ -181,6 +251,130 @@ function createApproximateBairroFeature({
   };
 }
 
+function FloatingHeader({
+  menuItems,
+  ctaLabel,
+  onCtaClick,
+  visible,
+}: {
+  menuItems: ReadonlyArray<{ href: string; label: string }>;
+  ctaLabel: string;
+  onCtaClick: () => void;
+  visible: boolean;
+}) {
+  return (
+    <div
+      className={`pointer-events-none fixed inset-x-0 top-4 z-40 px-4 transition duration-300 sm:px-6 ${
+        visible ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
+      }`}
+    >
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-white/15 bg-[#07111f]/62 px-3 py-3 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:px-4">
+        <a href="#topo" className="pointer-events-auto flex shrink-0 items-center gap-3 rounded-full px-2 py-1" aria-label="ST1 Internet">
+          <Image
+            src="/logo-ST1-03%201.png"
+            alt="ST1 Internet"
+            width={453}
+            height={327}
+            className="h-auto w-[42px] sm:w-[50px]"
+          />
+        </a>
+
+        <nav aria-label="Secoes da pagina" className="hidden min-w-0 flex-1 justify-center md:flex">
+          <ul className="flex flex-wrap items-center justify-center gap-2">
+            {menuItems.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  className="pointer-events-auto inline-flex rounded-full px-4 py-2 text-sm font-bold text-cyan-50/88 transition hover:bg-white/10 hover:text-white"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <button
+          type="button"
+          onClick={onCtaClick}
+          className="lp-magnetic-cta pointer-events-auto shrink-0 rounded-full border border-[#ff7400]/40 bg-[#ff7400] px-4 py-2 text-sm font-extrabold text-[#120804] shadow-[0_0_32px_rgba(255,116,0,0.32)] transition hover:-translate-y-0.5 hover:bg-[#ff8a1f] sm:px-5 sm:py-2.5"
+        >
+          {ctaLabel}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CustomCursor() {
+  const cursorRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const cursor = cursorRef.current;
+
+    if (!cursor || window.matchMedia("(pointer: coarse)").matches) {
+      return;
+    }
+
+    const cursorElement = cursor;
+    let currentX = window.innerWidth / 2;
+    let currentY = window.innerHeight / 2;
+    let targetX = currentX;
+    let targetY = currentY;
+    let animationFrameId = 0;
+
+    function moveCursor() {
+      currentX += (targetX - currentX) * 0.18;
+      currentY += (targetY - currentY) * 0.18;
+      cursorElement.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+      animationFrameId = window.requestAnimationFrame(moveCursor);
+    }
+
+    function handlePointerMove(event: PointerEvent) {
+      targetX = event.clientX;
+      targetY = event.clientY;
+      cursorElement.classList.add("is-visible");
+    }
+
+    function handlePointerOver(event: PointerEvent) {
+      const target = event.target as Element | null;
+      const isInteractive = target?.closest("a, button, input, select, textarea, summary, [role='button'], [role='option']");
+
+      cursorElement.classList.toggle("is-hovering", Boolean(isInteractive));
+    }
+
+    function handlePointerDown() {
+      cursorElement.classList.add("is-pressed");
+    }
+
+    function handlePointerUp() {
+      cursorElement.classList.remove("is-pressed");
+    }
+
+    function handlePointerLeave() {
+      cursorElement.classList.remove("is-visible", "is-hovering", "is-pressed");
+    }
+
+    animationFrameId = window.requestAnimationFrame(moveCursor);
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    document.addEventListener("pointerover", handlePointerOver);
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointerup", handlePointerUp);
+    document.documentElement.addEventListener("mouseleave", handlePointerLeave);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("pointermove", handlePointerMove);
+      document.removeEventListener("pointerover", handlePointerOver);
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointerup", handlePointerUp);
+      document.documentElement.removeEventListener("mouseleave", handlePointerLeave);
+    };
+  }, []);
+
+  return <div ref={cursorRef} className="lp-cursor" aria-hidden="true" />;
+}
+
 export default function V2LandingPage() {
   const consultationFormRef = useRef<HTMLDivElement | null>(null);
   const streetInputRef = useRef<HTMLInputElement | null>(null);
@@ -201,6 +395,7 @@ export default function V2LandingPage() {
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFloatingHeaderVisible, setIsFloatingHeaderVisible] = useState(true);
 
   const orderedBairros = useMemo(
     () =>
@@ -310,6 +505,76 @@ export default function V2LandingPage() {
       updateBairroDropdownPosition(pickerId);
     });
   }
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+      const firstFoldHeight = window.innerHeight * 0.9;
+      const scrollingUp = currentScrollY < lastScrollY;
+      const shouldShow = currentScrollY <= firstFoldHeight || scrollingUp;
+
+      setIsFloatingHeaderVisible(shouldShow);
+      lastScrollY = currentScrollY;
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const revealElements = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        ".lp-animated section, .lp-animated article, .lp-animated .lp-card-interactive, .lp-animated .lp-motion-card, .lp-animated details, .lp-animated h1, .lp-animated h2",
+      ),
+    );
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    revealElements.forEach((element, index) => {
+      element.classList.add("lp-reveal");
+      element.style.setProperty("--lp-reveal-delay", `${Math.min(index % 6, 5) * 55}ms`);
+
+      if (reducedMotion) {
+        element.classList.add("is-visible");
+      }
+    });
+
+    if (reducedMotion) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.12,
+      },
+    );
+
+    revealElements.forEach((element) => observer.observe(element));
+
+    return () => {
+      observer.disconnect();
+      revealElements.forEach((element) => {
+        element.classList.remove("lp-reveal", "is-visible");
+        element.style.removeProperty("--lp-reveal-delay");
+      });
+    };
+  }, [showResults, isLoadingCoverage]);
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -565,7 +830,7 @@ export default function V2LandingPage() {
           <button
             type="submit"
             disabled={isSubmittingLead}
-            className="w-full rounded-2xl bg-[#ff7400] px-6 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,116,0,0.28)] transition hover:-translate-y-0.5"
+            className="lp-magnetic-cta w-full rounded-2xl bg-[#ff7400] px-6 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,116,0,0.28)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSubmittingLead ? "Enviando consulta..." : "Verificar disponibilidade"}
           </button>
@@ -720,7 +985,8 @@ export default function V2LandingPage() {
 
   if (isLoadingCoverage) {
     return (
-      <main className="lp-animated grid min-h-screen place-items-center bg-[#050914] px-5 py-16 text-white sm:px-8 lg:px-12">
+      <main className="lp-animated lp-custom-cursor grid min-h-screen place-items-center bg-[#050914] px-5 py-16 text-white sm:px-8 lg:px-12">
+        <CustomCursor />
         <section className="w-full max-w-3xl rounded-[2.5rem] border border-white/10 bg-[#07111f] p-8 text-center shadow-2xl">
           <div className="mx-auto size-16 animate-spin rounded-full border-4 border-cyan-300/20 border-t-cyan-200" />
           <h1 className="mt-6 text-3xl font-black tracking-[-0.05em] text-white">Consultando rota da ST1...</h1>
@@ -734,32 +1000,20 @@ export default function V2LandingPage() {
 
   if (showResults) {
     return (
-      <main className="lp-animated min-h-screen overflow-hidden bg-[#050914] text-white">
+      <main className="lp-animated lp-custom-cursor min-h-screen overflow-hidden bg-[#050914] text-white">
+        <CustomCursor />
+        <FloatingHeader
+          menuItems={resultMenuItems}
+          ctaLabel="Nova consulta"
+          onCtaClick={() => {
+            setShowResults(false);
+            setLead(null);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          visible={isFloatingHeaderVisible}
+        />
         <section className="relative isolate min-h-screen px-5 py-6 sm:px-8 lg:px-12">
           <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.32),transparent_34%),radial-gradient(circle_at_86%_14%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
-
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
-              <Image
-                src="/logo-ST1-03%201.png"
-                alt="ST1 Internet"
-                width={453}
-                height={327}
-                className="h-auto w-[58px] sm:w-[68px]"
-              />
-            </a>
-            <button
-              type="button"
-              onClick={() => {
-                setShowResults(false);
-                setLead(null);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="rounded-full border border-cyan-200/30 bg-cyan-300/10 px-5 py-2.5 text-sm font-extrabold text-cyan-50 transition hover:bg-cyan-300 hover:text-[#04101f]"
-            >
-              Nova consulta
-            </button>
-          </div>
 
           <div className="mx-auto mt-12 max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-stretch">
@@ -777,7 +1031,7 @@ export default function V2LandingPage() {
 
               <div
                 id="planos"
-                className="order-2 grid gap-5 pt-4 md:grid-cols-2 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full"
+                className="scroll-mt-28 order-2 grid gap-5 pt-4 md:grid-cols-2 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full"
               >
                 {plans.map((plan) => {
                   const highlight = planHighlights[plan.name as keyof typeof planHighlights];
@@ -785,7 +1039,7 @@ export default function V2LandingPage() {
                   return (
                     <article
                       key={plan.name}
-                      className={`relative flex min-h-[620px] flex-col overflow-visible rounded-[2rem] border p-5 shadow-2xl transition hover:-translate-y-1 sm:p-6 lg:h-full ${
+                      className={`lp-card-interactive relative flex min-h-[620px] flex-col overflow-visible rounded-[2rem] border p-5 shadow-2xl transition sm:p-6 lg:h-full ${
                         highlight?.popular
                           ? "border-[#ff7400]/70 bg-[radial-gradient(circle_at_30%_0%,rgba(255,116,0,0.34),transparent_34%),linear-gradient(160deg,#12233d_0%,#07111f_64%,#050914_100%)] shadow-[0_26px_80px_rgba(255,116,0,0.18)]"
                           : "border-white/10 bg-[linear-gradient(160deg,#081629_0%,#06101f_100%)]"
@@ -839,7 +1093,7 @@ export default function V2LandingPage() {
 
                       <a
                         href="#proximos-passos"
-                        className={`relative mt-auto inline-flex w-full justify-center rounded-2xl px-5 py-4 text-base font-black transition hover:-translate-y-0.5 ${
+                        className={`lp-magnetic-cta relative mt-auto inline-flex w-full justify-center rounded-2xl px-5 py-4 text-base font-black transition hover:-translate-y-0.5 ${
                           highlight?.popular
                             ? "bg-[#ff7400] text-[#170a02] shadow-[0_0_34px_rgba(255,116,0,0.32)]"
                             : "bg-gradient-to-r from-cyan-200 to-white text-[#07111f]"
@@ -871,7 +1125,7 @@ export default function V2LandingPage() {
                   <div className="relative mt-5 aspect-square overflow-hidden lg:aspect-auto lg:h-[355px]">
                     <Image
                       src="/starzinho no note.png"
-                      alt="Starzinho acompanhando a analise do endereco"
+                      alt="Starzinho acompanhando a análise do endereço"
                       fill
                       sizes="(max-width: 1024px) 100vw, 40vw"
                       className="lp-float object-contain lg:object-cover lg:object-top"
@@ -899,9 +1153,11 @@ export default function V2LandingPage() {
               {painPoints.map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30"
+                  className="lp-card-interactive rounded-[2rem] border border-white/10 bg-white/[0.055] p-5"
                 >
-                  <span className="lp-pulse-dot mb-5 block size-3 rounded-full bg-[#ff7400] shadow-[0_0_22px_#ff7400]" />
+                  <span className="lp-icon-pop mb-5 grid size-12 place-items-center rounded-2xl border border-[#ff7400]/30 bg-[#ff7400]/12 text-[#ff9c46] shadow-[0_0_26px_rgba(255,116,0,0.18)]">
+                    <PainPointIcon title={item.title} />
+                  </span>
                   <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
                 </div>
@@ -923,7 +1179,7 @@ export default function V2LandingPage() {
               </p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 {stats.map(([title, text]) => (
-                  <div key={title} className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5">
+                  <div key={title} className="lp-card-interactive rounded-[2rem] border border-white/10 bg-white/[0.055] p-5">
                     <h3 className="text-lg font-black tracking-[-0.03em] text-white">{title}</h3>
                     <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
                   </div>
@@ -950,7 +1206,7 @@ export default function V2LandingPage() {
             </h2>
             <div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055]">
               {purchaseFaqs.map(([question, answer]) => (
-                <details key={question} className="group p-5 open:bg-white/[0.04] sm:p-6">
+                <details key={question} className="group p-5 transition hover:bg-white/[0.035] open:bg-white/[0.04] sm:p-6">
                   <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-white">
                     {question}
                   </summary>
@@ -961,7 +1217,7 @@ export default function V2LandingPage() {
           </div>
         </section>
 
-        <section id="proximos-passos" className="px-5 pb-20 sm:px-8 lg:px-12">
+        <section id="proximos-passos" className="scroll-mt-28 px-5 pb-20 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#ff7400]/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
             <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Próximo passo</p>
             <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
@@ -977,56 +1233,39 @@ export default function V2LandingPage() {
   }
 
   return (
-      <main className="lp-animated min-h-screen overflow-hidden bg-[#050914] text-white">
+    <main className="lp-animated lp-custom-cursor min-h-screen overflow-hidden bg-[#050914] text-white">
+      <CustomCursor />
+      <FloatingHeader
+        menuItems={landingMenuItems}
+        ctaLabel="Consultar rua"
+        onCtaClick={openConsultationModal}
+        visible={isFloatingHeaderVisible}
+      />
       <section className="relative isolate px-5 pb-0 pt-6 sm:px-8 lg:px-12">
         <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.36),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,116,0,0.30),transparent_32%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-b from-transparent via-[#050914]/70 to-[#050914]" />
         <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-cyan-300/10 bg-cyan-300/5 blur-3xl [mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)]" />
 
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <a href="#topo" className="flex items-center gap-3" aria-label="ST1 Internet">
-            <Image
-              src="/logo-ST1-03%201.png"
-              alt="ST1 Internet"
-              width={453}
-              height={327}
-              className="h-auto w-[58px] sm:w-[68px]"
-            />
-          </a>
-          <button
-            type="button"
-            onClick={openConsultationModal}
-            className="rounded-full border border-[#ff7400]/45 bg-[#ff7400] px-5 py-2.5 text-sm font-extrabold text-[#120804] shadow-[0_0_32px_rgba(255,116,0,0.35)] transition hover:-translate-y-0.5 hover:bg-[#ff8a1f]"
-          >
-            Consultar rua
-          </button>
-        </div>
-
-        <div id="topo" className="mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
+        <div id="topo" className="scroll-mt-28 mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100">
             <span className="lp-pulse-dot size-2 rounded-full bg-[#ff7400] shadow-[0_0_18px_#ff7400]" />
             Internet Fibra Ótica em São Luiz e Região
           </div>
 
           <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
-            Descubra se a fibra da ST1
-            <span className="block bg-gradient-to-r from-cyan-200 via-white to-[#ff7400] bg-clip-text text-transparent">
-              chega na sua rua.
+            Eu encontrei uma rota de internet fibra perto de você.
+            <span className="lp-hero-wordmark block bg-gradient-to-r from-cyan-200 via-white to-[#ff7400] bg-clip-text text-transparent">
+              Quer ver se chega na sua rua?
             </span>
           </h1>
+
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
+            O Starzinho cruza bairro, rua e rota de cobertura para iniciar a consulta da ST1 antes do atendimento seguir
+            pelo WhatsApp.
+          </p>
         </div>
 
-        <div id="consulta" ref={consultationFormRef} className="mx-auto mt-10 max-w-5xl">
-          <div className="lp-motion-card overflow-visible rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
-            <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
-              {renderBairroPicker("bairro-picker-main")}
-            </div>
-
-            {selectedBairro ? renderConsultationForm() : null}
-          </div>
-        </div>
-
-        <div className="mx-auto mt-5 flex max-w-5xl items-start gap-3 text-left sm:gap-4">
+        <div className="mx-auto mt-9 flex max-w-5xl items-start gap-3 text-left sm:gap-4">
           <div className="relative size-20 shrink-0 overflow-hidden rounded-full border-2 border-[#ff7400] bg-[#07111f] shadow-[0_0_34px_rgba(255,116,0,0.32)] sm:size-24">
             <Image
               src="/perfil-starzinho.png"
@@ -1037,12 +1276,22 @@ export default function V2LandingPage() {
               className="lp-float h-full w-full object-cover"
             />
           </div>
-          <div className="relative flex-1 rounded-2xl rounded-tl-sm border border-white/20 bg-white/82 px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] backdrop-blur before:absolute before:left-[-8px] before:top-7 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/20 before:bg-white/82 sm:px-6 sm:py-5">
+          <div className="lp-card-interactive relative flex-1 rounded-2xl rounded-tl-sm border border-white/20 bg-white/82 px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] backdrop-blur before:absolute before:left-[-8px] before:top-7 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/20 before:bg-white/82 sm:px-6 sm:py-5">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#072f78]">Starzinho</p>
             <p className="mt-1 text-base font-semibold leading-7 sm:text-lg">
-              Informe seu bairro e sua rua no formulário acima. Eu consulto a disponibilidade da ST1 e te mostro as
-              ofertas disponíveis para o seu endereço.
+              Eu já vi sinais de rota na região. Agora preciso do seu bairro e da sua rua para consultar se a fibra da
+              ST1 pode chegar no seu endereço e quais opções fazem sentido para sua casa.
             </p>
+          </div>
+        </div>
+
+        <div id="consulta" ref={consultationFormRef} className="scroll-mt-28 mx-auto mt-8 max-w-5xl">
+          <div className="lp-motion-card overflow-visible rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
+            <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
+              {renderBairroPicker("bairro-picker-main")}
+            </div>
+
+            {selectedBairro ? renderConsultationForm() : null}
           </div>
         </div>
 
@@ -1065,12 +1314,222 @@ export default function V2LandingPage() {
             {painPoints.map((item) => (
               <div
                 key={item.title}
-                className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30"
+                className="lp-card-interactive rounded-[2rem] border border-white/10 bg-white/[0.055] p-5"
               >
-                <span className="lp-pulse-dot mb-5 block size-3 rounded-full bg-[#ff7400] shadow-[0_0_22px_#ff7400]" />
+                <span className="lp-icon-pop mb-5 grid size-12 place-items-center rounded-2xl border border-[#ff7400]/30 bg-[#ff7400]/12 text-[#ff9c46] shadow-[0_0_26px_rgba(255,116,0,0.18)]">
+                  <PainPointIcon title={item.title} />
+                </span>
                 <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="streaming" className="scroll-mt-28 px-5 py-20 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(255,116,0,0.13),transparent_24%),linear-gradient(135deg,#0f1033_0%,#11143f_42%,#0a0d24_100%)]">
+          <div className="grid gap-12 px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-14">
+            <div className="max-w-xl">
+              <p className="inline-flex items-center rounded-full border border-[#ff7400]/30 bg-[#ff7400]/8 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#ff7400]">
+                Ultra velocidade
+              </p>
+              <h2 className="mt-7 text-4xl font-black leading-[0.95] tracking-[-0.06em] text-white sm:text-6xl">
+                Assista tudo.
+                <span className="mt-2 block text-[#ff7400]">Sem travar.</span>
+              </h2>
+              <p className="mt-6 max-w-lg text-lg leading-8 text-slate-300">
+                De séries e filmes ao BBB ao vivo e aos jogos da Copa do Mundo, a fibra da ST1 aguenta maratona,
+                vários aparelhos conectados e imagem em alta definição sem depender da sorte.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                {streamingHighlights.map((item) => (
+                  <span
+                    key={item}
+                    className="lp-card-interactive inline-flex rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm font-semibold text-slate-200"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative mx-auto min-h-[470px] w-full max-w-[760px]">
+              <div className="lp-image-tilt absolute right-[8%] top-0 z-20 w-[44%] rotate-[4deg] overflow-hidden rounded-[1.75rem] border border-white/12 shadow-[0_30px_70px_rgba(0,0,0,0.32)]">
+                <div className="relative aspect-[0.95]">
+                  <Image
+                    src="/serie-1.png"
+                    alt="Poster de série"
+                    fill
+                    sizes="(max-width: 1024px) 48vw, 20vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="lp-image-tilt absolute left-[10%] top-10 z-10 w-[52%] -rotate-[4deg] overflow-hidden rounded-[1.75rem] border border-[#ff7400]/18 shadow-[0_30px_70px_rgba(0,0,0,0.34)]">
+                <div className="relative aspect-[0.82]">
+                  <Image
+                    src="/bbb.png"
+                    alt="Programa ao vivo"
+                    fill
+                    sizes="(max-width: 1024px) 54vw, 24vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="lp-image-tilt absolute bottom-20 right-[16%] z-40 w-[40%] rotate-[7deg] overflow-hidden rounded-[1.5rem] border border-white/12 shadow-[0_30px_70px_rgba(0,0,0,0.34)]">
+                <div className="relative aspect-[0.9]">
+                  <Image
+                    src="/copa-do-mundo.jpg"
+                    alt="Estádio lotado em jogo da Copa do Mundo"
+                    fill
+                    sizes="(max-width: 1024px) 42vw, 18vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 z-50 overflow-hidden rounded-[1.4rem] border border-white/8 bg-[#11122f]/90 px-5 py-7 shadow-[0_22px_60px_rgba(0,0,0,0.26)]">
+                <div className="lp-marquee flex min-w-max items-center gap-8 text-[1.7rem] font-black tracking-[-0.04em] text-white/92 sm:text-[2.2rem]">
+                  {[...streamingPlatforms, ...streamingPlatforms].map((platform, index) => (
+                    <span
+                      key={`${platform}-${index}`}
+                      className={
+                        index % 3 === 0
+                          ? "text-[#ff2d2d]"
+                          : index % 3 === 1
+                            ? "text-[#29b8ff]"
+                            : "text-[#ffffff]"
+                      }
+                    >
+                      {platform}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="st1" className="scroll-mt-28 bg-[#f7f9fc] px-5 py-20 text-[#11143f] sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.98fr_1.02fr] lg:items-center">
+          <div className="relative mx-auto w-full max-w-[560px] rounded-[2rem] border border-[#e7ebf2] bg-white p-4 shadow-[0_30px_80px_rgba(17,20,63,0.12)]">
+            <div className="absolute inset-4 rounded-[1.5rem] border border-[#ff7400]/10" />
+            <div className="relative min-h-[520px] overflow-hidden rounded-[1.5rem] bg-[#dfe7ef]">
+              <Image
+                src="/foto-st1.png"
+                alt="Profissional da ST1 Internet em ambiente de atendimento"
+                fill
+                sizes="(max-width: 1024px) 100vw, 46vw"
+                className="object-cover object-top"
+              />
+              <div className="absolute inset-x-6 bottom-6 rounded-2xl border border-white/70 bg-white/95 p-4 shadow-[0_18px_45px_rgba(17,20,63,0.16)] backdrop-blur">
+                <div className="flex items-center gap-4">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#ff7400] text-lg font-black text-white">
+                    ✓
+                  </span>
+                  <div>
+                    <p className="text-sm font-black text-[#333399]">Compromisso ST1</p>
+                    <p className="mt-1 text-xs font-semibold text-slate-500">Qualidade em cada conexão.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full border border-[#e2e6ee] bg-[#eef2f8] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-[#333399]">
+              <span className="size-2 rounded-full bg-[#ff7400]" />
+              Quem somos
+            </p>
+            <h2 className="mt-7 max-w-3xl text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#11143f] sm:text-5xl">
+              A melhor internet do Maranhão começa com quem{" "}
+              <span className="text-[#ff7400]">entende de conexão</span>
+            </h2>
+            <div className="mt-7 grid gap-5 text-base font-semibold leading-7 text-slate-600">
+              <p>
+                A <strong className="text-[#333399]">ST1 Internet</strong> nasceu com um propósito claro: entregar
+                internet de verdade para quem não aceita lentidão, quedas constantes ou promessas vazias.
+              </p>
+              <p>
+                Investimos em infraestrutura própria, fibra óptica até a sua casa e monitoramento contínuo para
+                garantir <strong className="text-[#333399]">velocidade real, estabilidade e desempenho superior</strong>,
+                todos os dias.
+              </p>
+              <p>
+                Atendemos São Luís e diversas cidades do Maranhão com um padrão de qualidade que coloca a ST1 entre os
+                provedores mais confiáveis da região.
+              </p>
+            </div>
+            <div className="mt-9 grid gap-4 sm:grid-cols-2">
+              {[
+                ["▤", "Infraestrutura Própria"],
+                ["⌖", "Atendimento Local"],
+                ["⚡", "Tecnologia de Ponta"],
+                ["↗", "Expansão Constante"],
+              ].map(([icon, title]) => (
+                <div key={title} className="lp-card-interactive flex items-center gap-4 rounded-2xl border border-[#e7ebf2] bg-white px-4 py-4 shadow-[0_14px_35px_rgba(17,20,63,0.06)]">
+                  <span className="lp-icon-pop grid size-10 shrink-0 place-items-center rounded-xl bg-[#fff0e8] text-lg font-black text-[#ff7400]">
+                    {icon}
+                  </span>
+                  <p className="text-sm font-black text-[#333399]">{title}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="duvidas" className="scroll-mt-28 px-5 py-20 sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Por que avançar agora</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+              A ST1 entrega fibra para uma rotina residencial cada vez mais conectada.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-slate-300">
+              A consulta não te obriga a escolher plano na hora. Primeiro, o time verifica a rua; depois, ajuda a
+              entender se 1000MB ou 1300MB combina melhor com a casa.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              {stats.map(([title, text]) => (
+                <div key={title} className="lp-card-interactive rounded-[2rem] border border-white/10 bg-white/[0.055] p-5">
+                  <h3 className="text-lg font-black tracking-[-0.03em] text-white">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid min-h-[340px] place-items-center lg:min-h-[500px]">
+            <Image
+              src="/starzinho-no-rocket.png"
+              alt="Starzinho voando em um foguete com notebook"
+              width={1254}
+              height={1254}
+              className="lp-float h-auto w-full max-w-[500px] object-contain"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 py-20 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Dúvidas</p>
+          <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+            Antes de consultar sua rua
+          </h2>
+          <div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055]">
+            {purchaseFaqs.map(([question, answer]) => (
+              <details key={question} className="group p-5 transition hover:bg-white/[0.035] open:bg-white/[0.04] sm:p-6">
+                <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-white">
+                  {question}
+                </summary>
+                <p className="mt-4 text-sm leading-7 text-slate-300">{answer}</p>
+              </details>
             ))}
           </div>
         </div>
@@ -1083,12 +1542,16 @@ export default function V2LandingPage() {
             Como funciona a consulta com o Starzinho
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Em poucos passos, voce descobre se a ST1 ja pode chegar ate sua rua.
+            Em poucos passos, você descobre se a ST1 já pode chegar até sua rua.
           </p>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {steps.map(([title, text], index) => (
-              <div key={title} className="rounded-[2rem] border border-white/10 bg-[#050914]/60 p-5">
-                <span className="grid size-11 place-items-center rounded-2xl bg-white text-sm font-black text-[#072f78]">
+              <div
+                key={title}
+                className="lp-card-interactive lp-step-card rounded-[2rem] border border-white/10 bg-[#050914]/60 p-5"
+                style={{ animationDelay: `${index * 70 + 140}ms` }}
+              >
+                <span className="lp-icon-pop grid size-11 place-items-center rounded-2xl bg-white text-sm font-black text-[#072f78]">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-5 text-xl font-black tracking-[-0.04em] text-white">{title}</h3>
@@ -1102,7 +1565,7 @@ export default function V2LandingPage() {
       <section className="px-5 pb-20 sm:px-8 lg:px-12">
         <div className="lp-gradient-shift lp-motion-card mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#ff7400]/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
           <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-            Quer saber se essa rota chega ate sua rua?
+            Quer saber se essa rota chega até sua rua?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
             Informe seu bairro e sua rua para consultar a disponibilidade da ST1 pelo WhatsApp.
@@ -1110,7 +1573,7 @@ export default function V2LandingPage() {
           <button
             type="button"
             onClick={openConsultationModal}
-            className="mt-8 inline-flex rounded-full bg-[#ff7400] px-8 py-4 font-black text-[#07111f] transition hover:-translate-y-0.5"
+            className="lp-magnetic-cta mt-8 inline-flex rounded-full bg-[#ff7400] px-8 py-4 font-black text-[#07111f] transition hover:-translate-y-0.5"
           >
             Verificar minha rua
           </button>
@@ -1133,7 +1596,7 @@ export default function V2LandingPage() {
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="rounded-full border border-white/10 px-4 py-2 text-sm font-black text-cyan-100 transition hover:bg-white/10"
+                className="rounded-full border border-white/10 px-4 py-2 text-sm font-black text-cyan-100 transition hover:-translate-y-0.5 hover:bg-white/10"
               >
                 Fechar
               </button>

@@ -207,7 +207,7 @@ Alto Da Base	Raposa	CONSTRUIDA
 Jardim das Oliveiras	Raposa	CONSTRUIDA	
 Vila Maresia	Raposa	CONSTRUIDA	
 Inhaúma	Raposa	CONSTRUIDA	
-Vila Rio Sao João	Paço do Lumiar	CONSTRUIDA	
+Vila Rio São João	Paço do Lumiar	CONSTRUIDA	
 Parque Araçagy	Paço do Lumiar	CONSTRUIDA	
 Divinéia	São Luís	CONSTRUIDA	
 Vila Alonso Costa	São José de Ribamar	CONSTRUIDA	
@@ -264,7 +264,7 @@ Vila Tijupa Queimado	Paço do Lumiar	CONSTRUIDA
 Vila Sarney Filho II	Paço do Lumiar	CONSTRUIDA	
 Vila São José	Paço do Lumiar	CONSTRUIDA	
 São Francisco	São Luís	CONSTRUIDA	
-Jardim Sao Francisco	São Luís	CONSTRUIDA	
+Jardim São Francisco	São Luís	CONSTRUIDA	
 Ilhinha	São Luís	CONSTRUIDA	
 Pau Deitado	São José de Ribamar	CONSTRUIDA	
 Mutirão	São José de Ribamar	CONSTRUIDA	

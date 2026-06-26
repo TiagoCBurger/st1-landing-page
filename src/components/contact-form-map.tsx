@@ -54,7 +54,7 @@ export default function ContactFormMap() {
               Contato
             </p>
             <h1 className="mt-2 text-2xl font-semibold text-slate-900">
-              Atendimento por bairro em Sao Luis
+              Atendimento por bairro em São Luís
             </h1>
           </div>
 
@@ -121,7 +121,7 @@ export default function ContactFormMap() {
                     {selectedFeature?.properties.name}
                   </p>
                   <p className="mt-1 text-sm text-slate-600">
-                    {selectedFeature?.properties.zone} • CEP de referencia{" "}
+                    {selectedFeature?.properties.zone} • CEP de referência{" "}
                     {selectedFeature?.properties.postalCode}
                   </p>
                 </div>
