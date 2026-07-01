@@ -1,22 +1,39 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Package manager: npm only
+
+This project uses **npm exclusively** (`package-lock.json` is the source of truth). The
+`packageManager` field in `package.json` is pinned to `npm@11.3.0` on purpose: with Corepack
+enabled, this makes `pnpm install` / `yarn install` fail loudly in this folder instead of
+silently rewriting `node_modules` into an incompatible layout. Do not run `pnpm i`/`pnpm install`
+or `yarn` here, and do not change the `packageManager` field to anything other than an `npm@...`
+version.
+
 ## Getting Started
 
 First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+### Troubleshooting: `npm i` / `npm run dev` hanging or misbehaving
+
+`scripts/predev.mjs` runs automatically before `npm install` (`preinstall`) and before
+`npm run dev` (`predev`) and kills any leftover/orphaned `next build`, `npx`, `pnpm`, or `yarn`
+process still rooted in this project folder (the usual cause of "it worked before, now it just
+hangs" after reopening the repo). If something still looks stuck, run:
+
+```bash
+npm run clean:procs
+```
+
+This force-kills any straggler process (including a stuck `next dev`) tied to this directory,
+after which `npm i` / `npm run dev` should work normally again.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 

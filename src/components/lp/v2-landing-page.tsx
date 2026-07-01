@@ -5,14 +5,14 @@ import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { coverageBairros, painPoints, plans, stats } from "@/components/lp/lp-data";
+import { benefitPoints, coverageBairros, plans, stats } from "@/components/lp/lp-data";
 import { LpSectionDivider } from "@/components/lp/lp-section-divider";
 import { BairroFeature, saoLuisBairrosGeoJson } from "@/data/sao-luis-bairros";
 
 const BairroMap = dynamic(() => import("@/components/bairro-map"), {
   ssr: false,
   loading: () => (
-    <div className="grid min-h-[220px] place-items-center bg-[#050914] text-sm font-bold text-cyan-100/75">
+    <div className="grid min-h-[220px] place-items-center bg-[#232878] text-sm font-bold text-white/80/75">
       Carregando mapa...
     </div>
   ),
@@ -92,11 +92,11 @@ const resultMenuItems = [
   { href: "#proximos-passos", label: "Próximo passo" },
 ] as const;
 
-function PainPointIcon({ title }: { title: string }) {
+function BenefitIcon({ title }: { title: string }) {
   const iconClassName = "size-6";
 
   switch (title) {
-    case "Reunião travando":
+    case "Trabalho remoto sem cair":
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="4" y="5" width="16" height="11" rx="2" />
@@ -107,7 +107,7 @@ function PainPointIcon({ title }: { title: string }) {
           <path d="M16 9h.01" />
         </svg>
       );
-    case "Vídeo carregando toda hora":
+    case "Maratona sem travar":
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="5" width="18" height="14" rx="3" />
@@ -116,7 +116,7 @@ function PainPointIcon({ title }: { title: string }) {
           <path d="M18 3v2" />
         </svg>
       );
-    case "Jogo com lag":
+    case "Game sem lag":
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M6 12h4" />
@@ -126,7 +126,7 @@ function PainPointIcon({ title }: { title: string }) {
           <path d="M7 18h10a4 4 0 0 0 3.8-5.25l-1.2-3.7A4 4 0 0 0 15.8 6H8.2a4 4 0 0 0-3.8 3.05l-1.2 3.7A4 4 0 0 0 7 18Z" />
         </svg>
       );
-    case "Wi-Fi fraco nos cômodos":
+    case "Wi-Fi na casa toda":
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true" className={iconClassName} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 13a10 10 0 0 1 14 0" />
@@ -268,7 +268,7 @@ function FloatingHeader({
         visible ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-white/15 bg-[#07111f]/62 px-3 py-3 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:px-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-white/20 bg-[#2B3094]/92 px-3 py-3 shadow-[0_24px_70px_rgba(43,48,148,0.28)] backdrop-blur-xl sm:px-4">
         <a href="#topo" className="pointer-events-auto flex shrink-0 items-center gap-3 rounded-full px-2 py-1" aria-label="ST1 Internet">
           <Image
             src="/logo-ST1-03%201.png"
@@ -285,7 +285,7 @@ function FloatingHeader({
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="pointer-events-auto inline-flex rounded-full px-4 py-2 text-sm font-bold text-cyan-50/88 transition hover:bg-white/10 hover:text-white"
+                  className="pointer-events-auto inline-flex rounded-full px-4 py-2 text-sm font-bold text-white/88 transition hover:bg-white/10 hover:text-white"
                 >
                   {item.label}
                 </a>
@@ -297,7 +297,7 @@ function FloatingHeader({
         <button
           type="button"
           onClick={onCtaClick}
-          className="lp-magnetic-cta pointer-events-auto shrink-0 rounded-full border border-[#ff7400]/40 bg-[#ff7400] px-4 py-2 text-sm font-extrabold text-[#120804] shadow-[0_0_32px_rgba(255,116,0,0.32)] transition hover:-translate-y-0.5 hover:bg-[#ff8a1f] sm:px-5 sm:py-2.5"
+          className="lp-magnetic-cta pointer-events-auto shrink-0 rounded-full border border-[#F18721]/40 bg-[#F18721] px-4 py-2 text-sm font-extrabold text-white shadow-[0_0_32px_rgba(241,135,33,0.32)] transition hover:-translate-y-0.5 hover:bg-[#f59a45] sm:px-5 sm:py-2.5"
         >
           {ctaLabel}
         </button>
@@ -759,24 +759,24 @@ export default function V2LandingPage() {
 
     return (
       <form onSubmit={handleAvailabilitySubmit} className="grid gap-5 p-4 text-left sm:p-5 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#050914]">
+        <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#232878]">
           <div className="border-b border-white/10 px-4 py-3">
             <p className="text-sm font-black text-white">{selectedBairro.name}</p>
-            <p className="mt-1 text-xs leading-5 text-cyan-100/75">{selectedBairro.text}</p>
+            <p className="mt-1 text-xs leading-5 text-white/80/75">{selectedBairro.text}</p>
           </div>
           <BairroMap selectedFeature={selectedFeature} variant="dark" size="compact" />
         </div>
 
         <div className="grid content-start gap-4">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">Dados da consulta</p>
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-white/80">Dados da consulta</p>
             <h2 className="mt-2 text-2xl font-black tracking-[-0.04em] text-white">
               Verifique a disponibilidade na sua rua
             </h2>
           </div>
 
           <label className="block">
-            <span className="text-sm font-bold text-cyan-100">Rua</span>
+            <span className="text-sm font-bold text-white/80">Rua</span>
             <input
               name="rua"
               ref={isModal ? modalStreetInputRef : streetInputRef}
@@ -787,14 +787,14 @@ export default function V2LandingPage() {
                 setShowResults(false);
               }}
               placeholder="Digite o nome da sua rua"
-              className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-[#232878] px-4 py-4 text-white outline-none ring-[#F18721]/30 transition placeholder:text-slate-500 focus:border-[#F18721] focus:ring-4"
               required
             />
           </label>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="text-sm font-bold text-cyan-100">Nome</span>
+              <span className="text-sm font-bold text-white/80">Nome</span>
               <input
                 name="nome"
                 value={nome}
@@ -803,13 +803,13 @@ export default function V2LandingPage() {
                   setStatus("");
                 }}
                 placeholder="Seu nome"
-                className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+                className="mt-2 w-full rounded-2xl border border-white/10 bg-[#232878] px-4 py-4 text-white outline-none ring-[#F18721]/30 transition placeholder:text-slate-500 focus:border-[#F18721] focus:ring-4"
                 required
               />
             </label>
 
             <label className="block">
-              <span className="text-sm font-bold text-cyan-100">WhatsApp</span>
+              <span className="text-sm font-bold text-white/80">WhatsApp</span>
               <input
                 name="whatsapp"
                 value={whatsapp}
@@ -819,18 +819,18 @@ export default function V2LandingPage() {
                 }}
                 inputMode="tel"
                 placeholder="(98) 90000-0000"
-                className="mt-2 w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+                className="mt-2 w-full rounded-2xl border border-white/10 bg-[#232878] px-4 py-4 text-white outline-none ring-[#F18721]/30 transition placeholder:text-slate-500 focus:border-[#F18721] focus:ring-4"
                 required
               />
             </label>
           </div>
 
-          {status ? <p className="text-sm leading-6 text-[#ff7400]">{status}</p> : null}
+          {status ? <p className="text-sm leading-6 text-[#F18721]">{status}</p> : null}
 
           <button
             type="submit"
             disabled={isSubmittingLead}
-            className="lp-magnetic-cta w-full rounded-2xl bg-[#ff7400] px-6 py-4 text-base font-black text-[#07111f] shadow-[0_0_34px_rgba(255,116,0,0.28)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+            className="lp-magnetic-cta w-full rounded-2xl bg-[#F18721] px-6 py-4 text-base font-black text-white shadow-[0_0_34px_rgba(241,135,33,0.28)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSubmittingLead ? "Enviando consulta..." : "Verificar disponibilidade"}
           </button>
@@ -844,7 +844,7 @@ export default function V2LandingPage() {
 
     return (
       <div className="relative z-40 grid gap-3 text-left sm:grid-cols-[140px_minmax(0,1fr)] sm:items-start">
-        <span className="pt-1 text-sm font-black uppercase tracking-[0.2em] text-cyan-100 sm:pt-4">Bairro</span>
+        <span className="pt-1 text-sm font-black uppercase tracking-[0.2em] text-white/80 sm:pt-4">Bairro</span>
         <div
           ref={(element) => {
             bairroPickerRefs.current[pickerId] = element;
@@ -876,7 +876,7 @@ export default function V2LandingPage() {
                 }
               }}
               placeholder="Digite para buscar seu bairro"
-              className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 pr-24 text-white outline-none ring-cyan-300/30 transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-4"
+              className="w-full rounded-2xl border border-white/10 bg-[#232878] px-4 py-4 pr-24 text-white outline-none ring-[#F18721]/30 transition placeholder:text-slate-500 focus:border-[#F18721] focus:ring-4"
             />
             {bairroSearch ? (
               <button
@@ -893,7 +893,7 @@ export default function V2LandingPage() {
                   setShowResults(false);
                   openBairroPicker(pickerId);
                 }}
-                className="absolute right-12 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-cyan-100 transition hover:bg-white/10"
+                className="absolute right-12 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-white/80 transition hover:bg-white/10"
               >
                 <span className="text-lg leading-none">×</span>
               </button>
@@ -909,7 +909,7 @@ export default function V2LandingPage() {
 
                 openBairroPicker(pickerId);
               }}
-              className="absolute right-3 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-cyan-100 transition hover:bg-white/10"
+              className="absolute right-3 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-white/80 transition hover:bg-white/10"
             >
               <span className={`h-2 w-2 rotate-45 border-b-2 border-r-2 transition ${isCurrentPickerOpen ? "rotate-[225deg]" : ""}`} />
             </button>
@@ -928,10 +928,10 @@ export default function V2LandingPage() {
                     maxHeight: bairroDropdownPosition.maxHeight,
                     WebkitOverflowScrolling: "touch",
                   }}
-                  className="fixed z-[9999] overflow-y-auto overscroll-contain rounded-2xl border border-cyan-200/20 bg-[#050914] p-2 shadow-[0_30px_90px_rgba(0,0,0,0.72)] ring-1 ring-white/10"
+                  className="fixed z-[9999] overflow-y-auto overscroll-contain rounded-2xl border border-white/20 bg-[#232878] p-2 shadow-[0_30px_90px_rgba(0,0,0,0.72)] ring-1 ring-white/10"
                 >
-                  <div className="sticky top-0 z-10 mb-1 border-b border-white/10 bg-[#050914]/95 px-3 py-2 backdrop-blur">
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-cyan-100">
+                  <div className="sticky top-0 z-10 mb-1 border-b border-white/10 bg-[#232878]/95 px-3 py-2 backdrop-blur">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-white/80">
                       {filteredBairros.length === 1 ? "1 bairro encontrado" : `${filteredBairros.length} bairros encontrados`}
                     </p>
                   </div>
@@ -949,8 +949,8 @@ export default function V2LandingPage() {
                             onClick={() => selectBairro(bairro.id)}
                             className={`w-full rounded-xl px-3 py-3 text-left transition active:scale-[0.99] ${
                               isSelected
-                                ? "bg-cyan-300 text-[#04101f] shadow-[0_0_22px_rgba(103,232,249,0.20)]"
-                                : "text-slate-100 hover:bg-cyan-300/10 hover:text-white"
+                                ? "bg-white text-[#2B3094] shadow-[0_0_22px_rgba(255,255,255,0.20)]"
+                                : "text-slate-100 hover:bg-white/10 hover:text-white"
                             }`}
                           >
                             <span className="flex items-center justify-between gap-3">
@@ -958,7 +958,7 @@ export default function V2LandingPage() {
                                 <span className="block truncate text-sm font-black">{bairro.name}</span>
                                 <span
                                   className={`mt-1 block truncate text-xs ${
-                                    isSelected ? "text-[#04101f]/70" : "text-cyan-100/70"
+                                    isSelected ? "text-[#2B3094]/70" : "text-white/70"
                                   }`}
                                 >
                                   {bairro.city}
@@ -971,7 +971,7 @@ export default function V2LandingPage() {
                       })}
                     </div>
                   ) : (
-                    <p className="px-3 py-4 text-sm font-bold text-[#ff7400]">Nenhum bairro encontrado.</p>
+                    <p className="px-3 py-4 text-sm font-bold text-[#F18721]">Nenhum bairro encontrado.</p>
                   )}
                 </div>,
                 document.body,
@@ -985,10 +985,10 @@ export default function V2LandingPage() {
 
   if (isLoadingCoverage) {
     return (
-      <main className="lp-animated lp-custom-cursor grid min-h-screen place-items-center bg-[#050914] px-5 py-16 text-white sm:px-8 lg:px-12">
+      <main className="lp-animated lp-custom-cursor grid min-h-screen place-items-center bg-[#2B3094] px-5 py-16 text-white sm:px-8 lg:px-12">
         <CustomCursor />
-        <section className="w-full max-w-3xl rounded-[2.5rem] border border-white/10 bg-[#07111f] p-8 text-center shadow-2xl">
-          <div className="mx-auto size-16 animate-spin rounded-full border-4 border-cyan-300/20 border-t-cyan-200" />
+        <section className="w-full max-w-3xl rounded-[2.5rem] border border-white/15 bg-[#232878] p-8 text-center shadow-2xl">
+          <div className="mx-auto size-16 animate-spin rounded-full border-4 border-white/20 border-t-white" />
           <h1 className="mt-6 text-3xl font-black tracking-[-0.05em] text-white">Consultando rota da ST1...</h1>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-300">
             Estamos verificando o bairro, a rua e preparando os planos residenciais para sua consulta.
@@ -1000,7 +1000,7 @@ export default function V2LandingPage() {
 
   if (showResults) {
     return (
-      <main className="lp-animated lp-custom-cursor min-h-screen overflow-hidden bg-[#050914] text-white">
+      <main className="lp-animated lp-custom-cursor min-h-screen overflow-hidden bg-white text-[#2B3094]">
         <CustomCursor />
         <FloatingHeader
           menuItems={resultMenuItems}
@@ -1012,13 +1012,13 @@ export default function V2LandingPage() {
           }}
           visible={isFloatingHeaderVisible}
         />
-        <section className="relative isolate min-h-screen px-5 py-6 sm:px-8 lg:px-12">
-          <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.32),transparent_34%),radial-gradient(circle_at_86%_14%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)]" />
+        <section className="relative isolate min-h-screen bg-[#2B3094] px-5 py-6 text-white sm:px-8 lg:px-12">
+          <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(241,135,33,0.22),transparent_34%),radial-gradient(circle_at_86%_14%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(135deg,#2B3094_0%,#232878_52%,#2B3094_100%)]" />
 
           <div className="mx-auto mt-12 max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-stretch">
               <div className="order-1 lg:col-start-1 lg:row-start-1">
-                <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">{resultCopy.eyebrow}</p>
+                <p className="text-sm font-black uppercase tracking-[0.26em] text-white/90">{resultCopy.eyebrow}</p>
                 {lead?.available ? (
                   <span className="mt-5 inline-flex rounded-full border border-emerald-200/50 bg-emerald-300/15 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-emerald-100 shadow-[0_0_26px_rgba(110,231,183,0.18)]">
                     Disponível
@@ -1041,19 +1041,19 @@ export default function V2LandingPage() {
                       key={plan.name}
                       className={`lp-card-interactive relative flex min-h-[620px] flex-col overflow-visible rounded-[2rem] border p-5 shadow-2xl transition sm:p-6 lg:h-full ${
                         highlight?.popular
-                          ? "border-[#ff7400]/70 bg-[radial-gradient(circle_at_30%_0%,rgba(255,116,0,0.34),transparent_34%),linear-gradient(160deg,#12233d_0%,#07111f_64%,#050914_100%)] shadow-[0_26px_80px_rgba(255,116,0,0.18)]"
-                          : "border-white/10 bg-[linear-gradient(160deg,#081629_0%,#06101f_100%)]"
+                          ? "border-[#F18721]/70 bg-[radial-gradient(circle_at_30%_0%,rgba(241,135,33,0.34),transparent_34%),linear-gradient(160deg,#232878_0%,#2B3094_64%,#2B3094_100%)] shadow-[0_26px_80px_rgba(241,135,33,0.18)]"
+                          : "border-white/15 bg-[linear-gradient(160deg,#232878_0%,#2B3094_100%)]"
                       }`}
                     >
-                      <div className="absolute -right-16 -top-16 size-48 rounded-full bg-cyan-300/12 blur-2xl" />
+                      <div className="absolute -right-16 -top-16 size-48 rounded-full bg-white/12 blur-2xl" />
                       {highlight?.popular ? (
-                        <div className="absolute right-6 top-0 z-10 -translate-y-1/2 rounded-full border border-[#ffb06a]/80 bg-[#ff7400] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-[#170a02] shadow-[0_0_28px_rgba(255,116,0,0.45)]">
+                        <div className="absolute right-6 top-0 z-10 -translate-y-1/2 rounded-full border border-[#f5a654]/80 bg-[#F18721] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-[#170a02] shadow-[0_0_28px_rgba(241,135,33,0.45)]">
                           Mais popular
                         </div>
                       ) : null}
 
                       <div className="relative">
-                        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ff7400]">
+                        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#F18721]">
                           {highlight?.eyebrow ?? plan.label}
                         </p>
                         <div className="mt-6 flex items-end justify-between gap-4">
@@ -1061,19 +1061,19 @@ export default function V2LandingPage() {
                             <h2 className="text-5xl font-black tracking-[-0.06em] text-white sm:text-6xl">
                               {plan.name}
                             </h2>
-                            <p className="mt-2 text-sm font-bold text-cyan-100">{highlight?.speedNote}</p>
+                            <p className="mt-2 text-sm font-bold text-white/80">{highlight?.speedNote}</p>
                           </div>
                           <div className="rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-right">
-                            <p className="text-[11px] font-black uppercase tracking-[0.14em] text-cyan-100">Perfil</p>
+                            <p className="text-[11px] font-black uppercase tracking-[0.14em] text-white/80">Perfil</p>
                             <p className="mt-1 text-sm font-black text-white">{highlight?.devices}</p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="relative mt-7 rounded-[1.5rem] border border-white/10 bg-[#050914]/70 p-4">
+                      <div className="relative mt-7 rounded-[1.5rem] border border-white/10 bg-[#232878]/70 p-4">
                         <p className="text-sm font-bold text-slate-300">A partir de</p>
-                        <p className="mt-1 text-3xl font-black tracking-[-0.04em] text-cyan-100">{plan.price}</p>
-                        <p className="mt-3 text-sm font-black text-[#ff7400]">{highlight?.benefit}</p>
+                        <p className="mt-1 text-3xl font-black tracking-[-0.04em] text-white/80">{plan.price}</p>
+                        <p className="mt-3 text-sm font-black text-[#F18721]">{highlight?.benefit}</p>
                       </div>
 
                       <p className="relative mt-5 text-sm leading-6 text-slate-300">
@@ -1083,7 +1083,7 @@ export default function V2LandingPage() {
                       <ul className="relative mb-8 mt-6 space-y-3">
                         {plan.features.map((feature) => (
                           <li key={feature} className="flex items-center gap-3 text-sm font-semibold text-slate-100">
-                            <span className="grid size-5 shrink-0 place-items-center rounded-full bg-cyan-200 text-[11px] font-black text-[#06101f]">
+                            <span className="grid size-5 shrink-0 place-items-center rounded-full bg-white text-[11px] font-black text-[#2B3094]">
                               ✓
                             </span>
                             {feature}
@@ -1095,8 +1095,8 @@ export default function V2LandingPage() {
                         href="#proximos-passos"
                         className={`lp-magnetic-cta relative mt-auto inline-flex w-full justify-center rounded-2xl px-5 py-4 text-base font-black transition hover:-translate-y-0.5 ${
                           highlight?.popular
-                            ? "bg-[#ff7400] text-[#170a02] shadow-[0_0_34px_rgba(255,116,0,0.32)]"
-                            : "bg-gradient-to-r from-cyan-200 to-white text-[#07111f]"
+                            ? "bg-[#F18721] text-[#170a02] shadow-[0_0_34px_rgba(241,135,33,0.32)]"
+                            : "bg-white text-[#2B3094]"
                         }`}
                       >
                         {highlight?.popular ? "Quero o mais popular" : "Quero este plano"}
@@ -1109,7 +1109,7 @@ export default function V2LandingPage() {
               <div className="order-3 lg:col-start-1 lg:row-start-2">
                 <div className="lp-motion-card overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.06] lg:mt-6">
                   <div className="p-5 pb-0">
-                    <p className="text-sm font-bold text-cyan-100">{resultCopy.cardTitle}</p>
+                    <p className="text-sm font-bold text-white/80">{resultCopy.cardTitle}</p>
                     <p className="mt-2 text-lg font-black text-white">
                       {lead?.bairro}, {lead?.rua}
                     </p>
@@ -1137,45 +1137,45 @@ export default function V2LandingPage() {
           </div>
         </section>
 
-        <section className="relative px-5 py-20 sm:px-8 lg:px-12">
+        <section className="relative bg-white px-5 py-20 text-[#2B3094] sm:px-8 lg:px-12">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
-              <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Chega de conexão instável</p>
-              <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-                Internet para trabalhar, estudar, jogar e assistir sem depender da sorte.
+              <p className="text-sm font-black uppercase tracking-[0.26em] text-[#F18721]">O que muda na sua casa</p>
+              <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-[#2B3094] sm:text-5xl">
+                Trabalhe, estude, jogue e maratone — tudo junto, sem travar.
               </h2>
-              <p className="mt-5 text-lg leading-8 text-slate-300">
-                Sua rotina precisa de uma conexão que aguente vários aparelhos, chamadas de vídeo, streaming e jogos
-                online ao mesmo tempo.
+              <p className="mt-5 text-lg leading-8 text-slate-600">
+                Fibra rápida e estável pra rotina inteira: vários aparelhos ligados, videochamada rolando e streaming na
+                resolução máxima — sem depender da sorte.
               </p>
             </div>
             <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-              {painPoints.map((item) => (
+              {benefitPoints.map((item) => (
                 <div
                   key={item.title}
-                  className="lp-card-interactive rounded-[2rem] border border-white/10 bg-white/[0.055] p-5"
+                  className="lp-card-interactive rounded-[2rem] border border-[#2B3094]/10 bg-[#f5f6fb] p-5"
                 >
-                  <span className="lp-icon-pop mb-5 grid size-12 place-items-center rounded-2xl border border-[#ff7400]/30 bg-[#ff7400]/12 text-[#ff9c46] shadow-[0_0_26px_rgba(255,116,0,0.18)]">
-                    <PainPointIcon title={item.title} />
+                  <span className="lp-icon-pop mb-5 grid size-12 place-items-center rounded-2xl border border-[#F18721]/30 bg-[#F18721]/12 text-[#F18721] shadow-[0_0_26px_rgba(241,135,33,0.18)]">
+                    <BenefitIcon title={item.title} />
                   </span>
-                  <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
+                  <h3 className="text-lg font-black tracking-[-0.03em] text-[#2B3094]">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="px-5 py-20 sm:px-8 lg:px-12">
+        <section className="bg-[#2B3094] px-5 py-20 text-white sm:px-8 lg:px-12">
           <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
             <div>
-              <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Por que avançar agora</p>
+              <p className="text-sm font-black uppercase tracking-[0.26em] text-white/90">Por que avançar agora</p>
               <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-                A ST1 entrega fibra para uma rotina residencial cada vez mais conectada.
+                Sua casa merece uma internet à altura da sua rotina.
               </h2>
               <p className="mt-5 text-lg leading-8 text-slate-300">
-                A escolha do plano pode ser simples: 1000MB para velocidade e custo-benefício, 1300MB para quem quer
-                mais folga em casas com uso intenso.
+                A consulta é sem compromisso: primeiro, nossa equipe verifica a disponibilidade na sua rua e, depois,
+                ajuda você a escolher o plano ideal para a sua casa, seja 1000 MB ou 1300 MB.
               </p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 {stats.map(([title, text]) => (
@@ -1198,28 +1198,28 @@ export default function V2LandingPage() {
           </div>
         </section>
 
-        <section className="px-5 py-20 sm:px-8 lg:px-12">
+        <section className="bg-white px-5 py-20 text-[#2B3094] sm:px-8 lg:px-12">
           <div className="mx-auto max-w-5xl">
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Antes de escolher</p>
-            <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#F18721]">Antes de escolher</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-[#2B3094] sm:text-5xl">
               Dúvidas comuns antes de contratar
             </h2>
-            <div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055]">
+            <div className="mt-10 divide-y divide-[#2B3094]/10 overflow-hidden rounded-[2rem] border border-[#2B3094]/10 bg-[#f5f6fb]">
               {purchaseFaqs.map(([question, answer]) => (
-                <details key={question} className="group p-5 transition hover:bg-white/[0.035] open:bg-white/[0.04] sm:p-6">
-                  <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-white">
+                <details key={question} className="group p-5 transition hover:bg-[#2B3094]/5 open:bg-[#2B3094]/8 sm:p-6">
+                  <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-[#2B3094]">
                     {question}
                   </summary>
-                  <p className="mt-4 text-sm leading-7 text-slate-300">{answer}</p>
+                  <p className="mt-4 text-sm leading-7 text-slate-600">{answer}</p>
                 </details>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="proximos-passos" className="scroll-mt-28 px-5 pb-20 sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#ff7400]/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Próximo passo</p>
+        <section id="proximos-passos" className="scroll-mt-28 bg-[#2B3094] px-5 pb-20 text-white sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#F18721]/30 bg-[radial-gradient(circle_at_20%_20%,rgba(241,135,33,0.26),transparent_30%),linear-gradient(135deg,#232878,#2B3094)] p-8 text-center sm:p-12">
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#F18721]">Próximo passo</p>
             <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
               {resultCopy.nextTitle}
             </h2>
@@ -1233,7 +1233,7 @@ export default function V2LandingPage() {
   }
 
   return (
-    <main className="lp-animated lp-custom-cursor min-h-screen overflow-hidden bg-[#050914] text-white">
+    <main className="lp-animated lp-custom-cursor min-h-screen overflow-hidden bg-white text-[#2B3094]">
       <CustomCursor />
       <FloatingHeader
         menuItems={landingMenuItems}
@@ -1241,21 +1241,21 @@ export default function V2LandingPage() {
         onCtaClick={openConsultationModal}
         visible={isFloatingHeaderVisible}
       />
-      <section className="relative isolate px-5 pb-0 pt-6 sm:px-8 lg:px-12">
-        <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(0,148,255,0.36),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,116,0,0.30),transparent_32%),linear-gradient(135deg,#050914_0%,#07182c_52%,#080b12_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)]" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-b from-transparent via-[#050914]/70 to-[#050914]" />
-        <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-cyan-300/10 bg-cyan-300/5 blur-3xl [mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)]" />
+      <section className="relative isolate bg-[#2B3094] px-5 pb-0 pt-6 text-white sm:px-8 lg:px-12">
+        <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(241,135,33,0.22),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,255,255,0.10),transparent_32%),linear-gradient(135deg,#2B3094_0%,#232878_52%,#2B3094_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-b from-transparent via-[#2B3094]/70 to-white" />
+        <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-white/10 bg-white/5 blur-3xl [mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)]" />
 
         <div id="topo" className="scroll-mt-28 mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100">
-            <span className="lp-pulse-dot size-2 rounded-full bg-[#ff7400] shadow-[0_0_18px_#ff7400]" />
-            Internet Fibra Ótica em São Luiz e Região
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-white/80">
+            <span className="lp-pulse-dot size-2 rounded-full bg-[#F18721] shadow-[0_0_18px_#F18721]" />
+            Internet Fibra Ótica em São Luís e Região
           </div>
 
           <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
-            Eu encontrei uma rota de internet fibra perto de você.
-            <span className="lp-hero-wordmark block bg-gradient-to-r from-cyan-200 via-white to-[#ff7400] bg-clip-text text-transparent">
-              Quer ver se chega na sua rua?
+            Tem uma rota de internet fibra bem perto de você.
+            <span className="lp-hero-wordmark block bg-gradient-to-r from-white via-white to-[#F18721] bg-clip-text text-transparent">
+              Descubra se ela chega até a sua rua.
             </span>
           </h1>
 
@@ -1266,7 +1266,7 @@ export default function V2LandingPage() {
         </div>
 
         <div className="mx-auto mt-9 flex max-w-5xl items-start gap-3 text-left sm:gap-4">
-          <div className="relative size-20 shrink-0 overflow-hidden rounded-full border-2 border-[#ff7400] bg-[#07111f] shadow-[0_0_34px_rgba(255,116,0,0.32)] sm:size-24">
+          <div className="relative size-20 shrink-0 overflow-hidden rounded-full border-2 border-[#F18721] bg-[#232878] shadow-[0_0_34px_rgba(241,135,33,0.32)] sm:size-24">
             <Image
               src="/perfil-starzinho.png"
               alt="Starzinho"
@@ -1276,8 +1276,8 @@ export default function V2LandingPage() {
               className="lp-float h-full w-full object-cover"
             />
           </div>
-          <div className="lp-card-interactive relative flex-1 rounded-2xl rounded-tl-sm border border-white/20 bg-white/82 px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] backdrop-blur before:absolute before:left-[-8px] before:top-7 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/20 before:bg-white/82 sm:px-6 sm:py-5">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#072f78]">Starzinho</p>
+          <div className="lp-card-interactive relative flex-1 rounded-2xl rounded-tl-sm border border-white/20 bg-white/82 px-5 py-4 text-[#232878] shadow-[0_18px_45px_rgba(0,0,0,0.25)] backdrop-blur before:absolute before:left-[-8px] before:top-7 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/20 before:bg-white/82 sm:px-6 sm:py-5">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2B3094]">Starzinho</p>
             <p className="mt-1 text-base font-semibold leading-7 sm:text-lg">
               Eu já vi sinais de rota na região. Agora preciso do seu bairro e da sua rua para consultar se a fibra da
               ST1 pode chegar no seu endereço e quais opções fazem sentido para sua casa.
@@ -1286,8 +1286,8 @@ export default function V2LandingPage() {
         </div>
 
         <div id="consulta" ref={consultationFormRef} className="scroll-mt-28 mx-auto mt-8 max-w-5xl">
-          <div className="lp-motion-card overflow-visible rounded-[2rem] border border-white/12 bg-[#07111f]/90 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur">
-            <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
+          <div className="lp-motion-card overflow-visible rounded-[2rem] border border-white/15 bg-[#232878]/95 shadow-[0_24px_90px_rgba(0,0,0,0.35)] backdrop-blur">
+            <div className="border-b border-white/10 bg-white/10 p-4 sm:p-5">
               {renderBairroPicker("bairro-picker-main")}
             </div>
 
@@ -1298,45 +1298,45 @@ export default function V2LandingPage() {
         <LpSectionDivider className="mt-10" />
       </section>
 
-      <section className="relative px-5 py-20 sm:px-8 lg:px-12">
+      <section className="relative bg-white px-5 py-20 text-[#2B3094] sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Chega de conexão instável</p>
-            <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-              Internet para trabalhar, estudar, jogar e assistir sem depender da sorte.
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#F18721]">O que muda na sua casa</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-[#2B3094] sm:text-5xl">
+              Trabalhe, estude, jogue e maratone — tudo junto, sem travar.
             </h2>
-            <p className="mt-5 text-lg leading-8 text-slate-300">
-              Sua rotina precisa de uma conexão que aguente vários aparelhos, chamadas de vídeo, streaming e jogos
-              online ao mesmo tempo.
+            <p className="mt-5 text-lg leading-8 text-slate-600">
+              Fibra rápida e estável pra rotina inteira: vários aparelhos ligados, videochamada rolando e streaming na
+              resolução máxima — sem depender da sorte.
             </p>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {painPoints.map((item) => (
+            {benefitPoints.map((item) => (
               <div
                 key={item.title}
-                className="lp-card-interactive rounded-[2rem] border border-white/10 bg-white/[0.055] p-5"
+                className="lp-card-interactive rounded-[2rem] border border-[#2B3094]/10 bg-[#f5f6fb] p-5"
               >
-                <span className="lp-icon-pop mb-5 grid size-12 place-items-center rounded-2xl border border-[#ff7400]/30 bg-[#ff7400]/12 text-[#ff9c46] shadow-[0_0_26px_rgba(255,116,0,0.18)]">
-                  <PainPointIcon title={item.title} />
+                <span className="lp-icon-pop mb-5 grid size-12 place-items-center rounded-2xl border border-[#F18721]/30 bg-[#F18721]/12 text-[#F18721] shadow-[0_0_26px_rgba(241,135,33,0.18)]">
+                  <BenefitIcon title={item.title} />
                 </span>
-                <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
+                <h3 className="text-lg font-black tracking-[-0.03em] text-[#2B3094]">{item.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="streaming" className="scroll-mt-28 px-5 py-20 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(255,116,0,0.13),transparent_24%),linear-gradient(135deg,#0f1033_0%,#11143f_42%,#0a0d24_100%)]">
+      <section id="streaming" className="scroll-mt-28 bg-[#2B3094] px-5 py-20 text-white sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-white/15 bg-[radial-gradient(circle_at_top_right,rgba(241,135,33,0.18),transparent_28%),linear-gradient(135deg,#232878_0%,#2B3094_100%)]">
           <div className="grid gap-12 px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-14">
             <div className="max-w-xl">
-              <p className="inline-flex items-center rounded-full border border-[#ff7400]/30 bg-[#ff7400]/8 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#ff7400]">
+              <p className="inline-flex items-center rounded-full border border-[#F18721]/30 bg-[#F18721]/8 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#F18721]">
                 Ultra velocidade
               </p>
               <h2 className="mt-7 text-4xl font-black leading-[0.95] tracking-[-0.06em] text-white sm:text-6xl">
                 Assista tudo.
-                <span className="mt-2 block text-[#ff7400]">Sem travar.</span>
+                <span className="mt-2 block text-[#F18721]">Sem travar.</span>
               </h2>
               <p className="mt-6 max-w-lg text-lg leading-8 text-slate-300">
                 De séries e filmes ao BBB ao vivo e aos jogos da Copa do Mundo, a fibra da ST1 aguenta maratona,
@@ -1368,7 +1368,7 @@ export default function V2LandingPage() {
                 </div>
               </div>
 
-              <div className="lp-image-tilt absolute left-[10%] top-10 z-10 w-[52%] -rotate-[4deg] overflow-hidden rounded-[1.75rem] border border-[#ff7400]/18 shadow-[0_30px_70px_rgba(0,0,0,0.34)]">
+              <div className="lp-image-tilt absolute left-[10%] top-10 z-10 w-[52%] -rotate-[4deg] overflow-hidden rounded-[1.75rem] border border-[#F18721]/18 shadow-[0_30px_70px_rgba(0,0,0,0.34)]">
                 <div className="relative aspect-[0.82]">
                   <Image
                     src="/bbb.png"
@@ -1392,7 +1392,7 @@ export default function V2LandingPage() {
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 z-50 overflow-hidden rounded-[1.4rem] border border-white/8 bg-[#11122f]/90 px-5 py-7 shadow-[0_22px_60px_rgba(0,0,0,0.26)]">
+              <div className="absolute bottom-0 left-0 right-0 z-50 overflow-hidden rounded-[1.4rem] border border-white/10 bg-[#232878]/90 px-5 py-7 shadow-[0_22px_60px_rgba(0,0,0,0.26)]">
                 <div className="lp-marquee flex min-w-max items-center gap-8 text-[1.7rem] font-black tracking-[-0.04em] text-white/92 sm:text-[2.2rem]">
                   {[...streamingPlatforms, ...streamingPlatforms].map((platform, index) => (
                     <span
@@ -1415,13 +1415,13 @@ export default function V2LandingPage() {
         </div>
       </section>
 
-      <section id="st1" className="scroll-mt-28 bg-[#f7f9fc] px-5 py-20 text-[#11143f] sm:px-8 lg:px-12">
+      <section id="st1" className="scroll-mt-28 bg-white px-5 py-20 text-[#2B3094] sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.98fr_1.02fr] lg:items-center">
           <div className="relative mx-auto w-full max-w-[560px] rounded-[2rem] border border-[#e7ebf2] bg-white p-4 shadow-[0_30px_80px_rgba(17,20,63,0.12)]">
-            <div className="absolute inset-4 rounded-[1.5rem] border border-[#ff7400]/10" />
+            <div className="absolute inset-4 rounded-[1.5rem] border border-[#F18721]/10" />
             <div className="relative min-h-[520px] overflow-hidden rounded-[1.5rem] bg-[#dfe7ef]">
               <Image
-                src="/foto-st1.png"
+                src="/card_home_01_1.jpg"
                 alt="Profissional da ST1 Internet em ambiente de atendimento"
                 fill
                 sizes="(max-width: 1024px) 100vw, 46vw"
@@ -1429,11 +1429,11 @@ export default function V2LandingPage() {
               />
               <div className="absolute inset-x-6 bottom-6 rounded-2xl border border-white/70 bg-white/95 p-4 shadow-[0_18px_45px_rgba(17,20,63,0.16)] backdrop-blur">
                 <div className="flex items-center gap-4">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#ff7400] text-lg font-black text-white">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#F18721] text-lg font-black text-white">
                     ✓
                   </span>
                   <div>
-                    <p className="text-sm font-black text-[#333399]">Compromisso ST1</p>
+                    <p className="text-sm font-black text-[#2B3094]">Compromisso ST1</p>
                     <p className="mt-1 text-xs font-semibold text-slate-500">Qualidade em cada conexão.</p>
                   </div>
                 </div>
@@ -1442,22 +1442,22 @@ export default function V2LandingPage() {
           </div>
 
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#e2e6ee] bg-[#eef2f8] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-[#333399]">
-              <span className="size-2 rounded-full bg-[#ff7400]" />
+            <p className="inline-flex items-center gap-2 rounded-full border border-[#e2e6ee] bg-[#eef2f8] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-[#2B3094]">
+              <span className="size-2 rounded-full bg-[#F18721]" />
               Quem somos
             </p>
-            <h2 className="mt-7 max-w-3xl text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#11143f] sm:text-5xl">
+            <h2 className="mt-7 max-w-3xl text-4xl font-black leading-[1.02] tracking-[-0.05em] text-[#2B3094] sm:text-5xl">
               A melhor internet do Maranhão começa com quem{" "}
-              <span className="text-[#ff7400]">entende de conexão</span>
+              <span className="text-[#F18721]">entende de conexão</span>
             </h2>
             <div className="mt-7 grid gap-5 text-base font-semibold leading-7 text-slate-600">
               <p>
-                A <strong className="text-[#333399]">ST1 Internet</strong> nasceu com um propósito claro: entregar
+                A <strong className="text-[#2B3094]">ST1 Internet</strong> nasceu com um propósito claro: entregar
                 internet de verdade para quem não aceita lentidão, quedas constantes ou promessas vazias.
               </p>
               <p>
                 Investimos em infraestrutura própria, fibra óptica até a sua casa e monitoramento contínuo para
-                garantir <strong className="text-[#333399]">velocidade real, estabilidade e desempenho superior</strong>,
+                garantir <strong className="text-[#2B3094]">velocidade real, estabilidade e desempenho superior</strong>,
                 todos os dias.
               </p>
               <p>
@@ -1473,10 +1473,10 @@ export default function V2LandingPage() {
                 ["↗", "Expansão Constante"],
               ].map(([icon, title]) => (
                 <div key={title} className="lp-card-interactive flex items-center gap-4 rounded-2xl border border-[#e7ebf2] bg-white px-4 py-4 shadow-[0_14px_35px_rgba(17,20,63,0.06)]">
-                  <span className="lp-icon-pop grid size-10 shrink-0 place-items-center rounded-xl bg-[#fff0e8] text-lg font-black text-[#ff7400]">
+                  <span className="lp-icon-pop grid size-10 shrink-0 place-items-center rounded-xl bg-[#fff0e8] text-lg font-black text-[#F18721]">
                     {icon}
                   </span>
-                  <p className="text-sm font-black text-[#333399]">{title}</p>
+                  <p className="text-sm font-black text-[#2B3094]">{title}</p>
                 </div>
               ))}
             </div>
@@ -1484,16 +1484,16 @@ export default function V2LandingPage() {
         </div>
       </section>
 
-      <section id="duvidas" className="scroll-mt-28 px-5 py-20 sm:px-8 lg:px-12">
+      <section id="duvidas" className="scroll-mt-28 bg-[#2B3094] px-5 py-20 text-white sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">Por que avançar agora</p>
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-white/90">Por que avançar agora</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-              A ST1 entrega fibra para uma rotina residencial cada vez mais conectada.
+              Sua casa merece uma internet à altura da sua rotina.
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-300">
-              A consulta não te obriga a escolher plano na hora. Primeiro, o time verifica a rua; depois, ajuda a
-              entender se 1000MB ou 1300MB combina melhor com a casa.
+              A consulta é sem compromisso: primeiro, nossa equipe verifica a disponibilidade na sua rua e, depois,
+              ajuda você a escolher o plano ideal para a sua casa, seja 1000 MB ou 1300 MB.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {stats.map(([title, text]) => (
@@ -1516,28 +1516,28 @@ export default function V2LandingPage() {
         </div>
       </section>
 
-      <section className="px-5 py-20 sm:px-8 lg:px-12">
+      <section className="bg-white px-5 py-20 text-[#2B3094] sm:px-8 lg:px-12">
         <div className="mx-auto max-w-5xl">
-          <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Dúvidas</p>
-          <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-[#F18721]">Dúvidas</p>
+          <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-[#2B3094] sm:text-5xl">
             Antes de consultar sua rua
           </h2>
-          <div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055]">
+          <div className="mt-10 divide-y divide-[#2B3094]/10 overflow-hidden rounded-[2rem] border border-[#2B3094]/10 bg-[#f5f6fb]">
             {purchaseFaqs.map(([question, answer]) => (
-              <details key={question} className="group p-5 transition hover:bg-white/[0.035] open:bg-white/[0.04] sm:p-6">
-                <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-white">
+              <details key={question} className="group p-5 transition hover:bg-[#2B3094]/5 open:bg-[#2B3094]/8 sm:p-6">
+                <summary className="cursor-pointer list-none text-lg font-black tracking-[-0.03em] text-[#2B3094]">
                   {question}
                 </summary>
-                <p className="mt-4 text-sm leading-7 text-slate-300">{answer}</p>
+                <p className="mt-4 text-sm leading-7 text-slate-600">{answer}</p>
               </details>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-5 py-20 sm:px-8 lg:px-12">
-        <div className="lp-motion-card mx-auto max-w-7xl rounded-[2.75rem] border border-white/10 bg-[linear-gradient(135deg,rgba(0,148,255,0.12),rgba(255,116,0,0.10))] p-6 sm:p-10">
-          <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Consulta de cobertura</p>
+      <section className="bg-[#2B3094] px-5 py-20 text-white sm:px-8 lg:px-12">
+        <div className="lp-motion-card mx-auto max-w-7xl rounded-[2.75rem] border border-white/15 bg-[radial-gradient(circle_at_top_left,rgba(241,135,33,0.16),transparent_30%),linear-gradient(135deg,#232878,#2B3094)] p-6 sm:p-10">
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-[#F18721]">Consulta de cobertura</p>
           <h2 className="mt-4 max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
             Como funciona a consulta com o Starzinho
           </h2>
@@ -1548,10 +1548,10 @@ export default function V2LandingPage() {
             {steps.map(([title, text], index) => (
               <div
                 key={title}
-                className="lp-card-interactive lp-step-card rounded-[2rem] border border-white/10 bg-[#050914]/60 p-5"
+                className="lp-card-interactive lp-step-card rounded-[2rem] border border-white/15 bg-white/10 p-5"
                 style={{ animationDelay: `${index * 70 + 140}ms` }}
               >
-                <span className="lp-icon-pop grid size-11 place-items-center rounded-2xl bg-white text-sm font-black text-[#072f78]">
+                <span className="lp-icon-pop grid size-11 place-items-center rounded-2xl bg-white text-sm font-black text-[#2B3094]">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-5 text-xl font-black tracking-[-0.04em] text-white">{title}</h3>
@@ -1562,18 +1562,18 @@ export default function V2LandingPage() {
         </div>
       </section>
 
-      <section className="px-5 pb-20 sm:px-8 lg:px-12">
-        <div className="lp-gradient-shift lp-motion-card mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#ff7400]/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,116,0,0.26),transparent_30%),linear-gradient(135deg,#07182c,#050914)] p-8 text-center sm:p-12">
-          <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+      <section className="bg-white px-5 pb-20 text-[#2B3094] sm:px-8 lg:px-12">
+        <div className="lp-motion-card mx-auto max-w-7xl overflow-hidden rounded-[2.75rem] border border-[#2B3094]/10 bg-[#f5f6fb] p-8 text-center shadow-[0_24px_70px_rgba(43,48,148,0.08)] sm:p-12">
+          <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.05em] text-[#2B3094] sm:text-5xl">
             Quer saber se essa rota chega até sua rua?
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
             Informe seu bairro e sua rua para consultar a disponibilidade da ST1 pelo WhatsApp.
           </p>
           <button
             type="button"
             onClick={openConsultationModal}
-            className="lp-magnetic-cta mt-8 inline-flex rounded-full bg-[#ff7400] px-8 py-4 font-black text-[#07111f] transition hover:-translate-y-0.5"
+            className="lp-magnetic-cta mt-8 inline-flex rounded-full bg-[#F18721] px-8 py-4 font-black text-white transition hover:-translate-y-0.5 hover:bg-[#f59a45]"
           >
             Verificar minha rua
           </button>
@@ -1581,28 +1581,28 @@ export default function V2LandingPage() {
       </section>
 
       {isModalOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/80 px-4 py-6 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2B3094]/80 px-4 py-6 backdrop-blur-sm">
           <div
             className="absolute inset-0"
             aria-hidden="true"
             onClick={() => setIsModalOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-5xl overflow-visible rounded-[2rem] border border-white/12 bg-[#07111f]/95 shadow-[0_24px_90px_rgba(0,0,0,0.55)]">
+          <div className="relative z-10 w-full max-w-5xl overflow-visible rounded-[2rem] border border-white/15 bg-[#2B3094]/98 shadow-[0_24px_90px_rgba(43,48,148,0.45)]">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-6">
               <div>
-                <p className="text-sm font-black uppercase tracking-[0.18em] text-cyan-100">Consulta de cobertura</p>
+                <p className="text-sm font-black uppercase tracking-[0.18em] text-white/80">Consulta de cobertura</p>
                 <p className="mt-1 text-lg font-black text-white">Preencha seus dados para verificar a disponibilidade</p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="rounded-full border border-white/10 px-4 py-2 text-sm font-black text-cyan-100 transition hover:-translate-y-0.5 hover:bg-white/10"
+                className="rounded-full border border-white/10 px-4 py-2 text-sm font-black text-white/80 transition hover:-translate-y-0.5 hover:bg-white/10"
               >
                 Fechar
               </button>
             </div>
 
-            <div className="border-b border-white/10 bg-cyan-300/10 p-4 sm:p-5">
+            <div className="border-b border-white/10 bg-white/10 p-4 sm:p-5">
               {renderBairroPicker("bairro-picker-modal")}
             </div>
 

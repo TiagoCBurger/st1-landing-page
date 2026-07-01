@@ -35,7 +35,7 @@ const socialLinks = [
 
 export default function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-white/8 bg-[#050914] text-slate-300">
+    <footer className="mt-auto border-t border-[#2B3094]/10 bg-[#2B3094] text-white/80">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] lg:px-12 lg:py-14">
         <div>
           <Link href="/lp/v2" className="inline-flex items-center" aria-label="ST1 Internet">
@@ -59,7 +59,7 @@ export default function SiteFooter() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-slate-200 transition hover:border-[#ff7400]/60 hover:text-[#ff7400]"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-slate-200 transition hover:border-[#F18721]/60 hover:text-[#F18721]"
               >
                 {icon}
               </a>
@@ -68,14 +68,14 @@ export default function SiteFooter() {
         </div>
 
         <div>
-          <h2 className="text-sm font-black uppercase tracking-[0.18em] text-[#ff7400]">Contato</h2>
+          <h2 className="text-sm font-black uppercase tracking-[0.18em] text-[#F18721]">Contato</h2>
           <ul className="mt-5 space-y-4 text-sm">
             <li>
               <a
                 href="tel:+559830140992"
                 className="inline-flex items-center gap-3 text-slate-300 transition hover:text-white"
               >
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/12 text-[#ff7400]">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/12 text-[#F18721]">
                   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[1.75]">
                     <path d="M6.5 4.8c0-.8.6-1.5 1.4-1.6l2.2-.3c.7-.1 1.3.3 1.5.9l1 2.8c.2.5 0 1.1-.5 1.4l-1.6 1c1.1 2.1 2.8 3.8 4.9 4.9l1-1.6c.3-.5.9-.7 1.4-.5l2.8 1c.6.2 1 .8.9 1.5l-.3 2.2c-.1.8-.8 1.4-1.6 1.4C10.2 18.8 5.2 13.8 5.2 7.3 5.2 6.5 5.8 5.8 6.5 4.8z" />
                   </svg>
@@ -88,7 +88,7 @@ export default function SiteFooter() {
                 href="mailto:contato@st1.net.br"
                 className="inline-flex items-center gap-3 text-slate-300 transition hover:text-white"
               >
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/12 text-[#ff7400]">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/12 text-[#F18721]">
                   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[1.75]">
                     <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
                     <path d="m4 7 8 6 8-6" />

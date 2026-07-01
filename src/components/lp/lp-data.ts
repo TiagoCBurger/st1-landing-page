@@ -1,23 +1,23 @@
-export const painPoints = [
+export const benefitPoints = [
   {
-    title: "Reunião travando",
-    text: "Mais estabilidade para trabalhar em casa sem interrupções.",
+    title: "Trabalho remoto sem cair",
+    text: "Reunião, aula online e trabalho remoto sem cair no meio da call.",
   },
   {
-    title: "Vídeo carregando toda hora",
-    text: "Assista seus conteúdos com mais fluidez, sem depender de uma conexão instável.",
+    title: "Maratona sem travar",
+    text: "Série, filme e live em HD ou 4K, do começo ao fim.",
   },
   {
-    title: "Jogo com lag",
-    text: "Conexão mais estável para jogar online com menos dor de cabeça.",
+    title: "Game sem lag",
+    text: "Partida online com ping estável e resposta na hora.",
   },
   {
-    title: "Wi-Fi fraco nos cômodos",
-    text: "Mais performance para casas com vários aparelhos conectados ao mesmo tempo.",
+    title: "Wi-Fi na casa toda",
+    text: "Celular, notebook, smart TV e videogame conectados ao mesmo tempo.",
   },
   {
-    title: "Internet caindo no pior momento",
-    text: "Sua rotina precisa de uma conexão confiável quando você mais precisa.",
+    title: "Conexão de confiança",
+    text: "Quando você mais precisa, a internet responde.",
   },
 ];
 

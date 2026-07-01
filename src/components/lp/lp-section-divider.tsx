@@ -15,7 +15,7 @@ export function LpSectionDivider({ className = "" }: LpSectionDividerProps) {
           <linearGradient id="lp-section-divider-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="var(--brand-orange)" />
             <stop offset="48%" stopColor="var(--brand-blue)" />
-            <stop offset="100%" stopColor="var(--brand-cyan)" />
+            <stop offset="100%" stopColor="#ffffff" />
           </linearGradient>
           <filter id="lp-section-divider-glow" x="-20%" y="-200%" width="140%" height="500%">
             <feGaussianBlur stdDeviation="4" result="blur" />

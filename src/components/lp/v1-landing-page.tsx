@@ -1,25 +1,25 @@
 import Image from "next/image";
 
-const painPoints = [
+const benefitPoints = [
   {
-    title: "Reunião travando",
-    text: "Mais estabilidade para trabalhar em casa sem interrupções.",
+    title: "Trabalho remoto sem cair",
+    text: "Reunião, aula online e trabalho remoto sem cair no meio da call.",
   },
   {
-    title: "Vídeo carregando toda hora",
-    text: "Assista seus conteúdos com mais fluidez, sem depender de uma conexão instável.",
+    title: "Maratona sem travar",
+    text: "Série, filme e live em HD ou 4K, do começo ao fim.",
   },
   {
-    title: "Jogo com lag",
-    text: "Conexão mais estável para jogar online com menos dor de cabeça.",
+    title: "Game sem lag",
+    text: "Partida online com ping estável e resposta na hora.",
   },
   {
-    title: "Wi-Fi fraco nos cômodos",
-    text: "Mais performance para casas com vários aparelhos conectados ao mesmo tempo.",
+    title: "Wi-Fi na casa toda",
+    text: "Celular, notebook, smart TV e videogame conectados ao mesmo tempo.",
   },
   {
-    title: "Internet caindo no pior momento",
-    text: "Sua rotina precisa de uma conexão confiável quando você mais precisa.",
+    title: "Conexão de confiança",
+    text: "Quando você mais precisa, a internet responde.",
   },
 ];
 
@@ -236,16 +236,17 @@ export default function V1LandingPage() {
       <section className="relative px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">Chega de conexão instável</p>
+            <p className="text-sm font-black uppercase tracking-[0.26em] text-[#ff7400]">O que muda na sua casa</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-              Chega de internet travando no meio da sua rotina!
+              Trabalhe, estude, jogue e maratone — tudo junto, sem travar.
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-300">
-              Trabalhar, estudar, jogar ou assistir não deveria depender de uma conexão instável.
+              Fibra rápida e estável pra rotina inteira: vários aparelhos ligados, videochamada rolando e streaming na
+              resolução máxima — sem depender da sorte.
             </p>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {painPoints.map((item) => (
+            {benefitPoints.map((item) => (
               <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 transition hover:-translate-y-1 hover:border-cyan-200/30">
                 <span className="mb-5 block size-3 rounded-full bg-[#ff7400] shadow-[0_0_22px_#ff7400]" />
                 <h3 className="text-lg font-black tracking-[-0.03em] text-white">{item.title}</h3>

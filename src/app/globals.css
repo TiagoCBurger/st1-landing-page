@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050914;
-  --foreground: #f8fafc;
-  --brand-blue: #333399;
-  --brand-orange: #ff7400;
-  --brand-cyan: #67e8f9;
+  --background: #ffffff;
+  --foreground: #2b3094;
+  --brand-blue: #2b3094;
+  --brand-blue-dark: #232878;
+  --brand-orange: #f18721;
+  --brand-cyan: #ffffff;
 }
 
 @theme inline {
@@ -102,9 +103,9 @@ details summary::-webkit-details-marker {
   width: 26px;
   height: 26px;
   pointer-events: none;
-  border: 2px solid rgba(103, 232, 249, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 999px;
-  box-shadow: 0 0 24px rgba(103, 232, 249, 0.28), inset 0 0 14px rgba(255, 116, 0, 0.16);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.28), inset 0 0 14px rgba(241, 135, 33, 0.16);
   opacity: 0;
   transform: translate3d(-50px, -50px, 0);
   transition:
@@ -122,8 +123,8 @@ details summary::-webkit-details-marker {
   position: absolute;
   inset: 8px;
   border-radius: inherit;
-  background: #ff7400;
-  box-shadow: 0 0 18px rgba(255, 116, 0, 0.7);
+  background: #f18721;
+  box-shadow: 0 0 18px rgba(241, 135, 33, 0.7);
   transition: inset 180ms ease, opacity 180ms ease;
 }
 
@@ -134,9 +135,9 @@ details summary::-webkit-details-marker {
 .lp-cursor.is-hovering {
   width: 52px;
   height: 52px;
-  border-color: rgba(255, 116, 0, 0.95);
-  background: rgba(255, 116, 0, 0.08);
-  box-shadow: 0 0 34px rgba(255, 116, 0, 0.34), inset 0 0 20px rgba(103, 232, 249, 0.12);
+  border-color: rgba(241, 135, 33, 0.95);
+  background: rgba(241, 135, 33, 0.08);
+  box-shadow: 0 0 34px rgba(241, 135, 33, 0.34), inset 0 0 20px rgba(255, 255, 255, 0.12);
 }
 
 .lp-cursor.is-hovering::after {
@@ -171,7 +172,7 @@ details summary::-webkit-details-marker {
 .lp-animated .lp-hero-wordmark {
   background-size: 220% 220%;
   animation: lp-gradient-shift 6.5s ease-in-out infinite;
-  filter: drop-shadow(0 16px 32px rgba(103, 232, 249, 0.12));
+  filter: drop-shadow(0 16px 32px rgba(43, 48, 148, 0.12));
 }
 
 .lp-animated .lp-card-interactive {
@@ -191,8 +192,8 @@ details summary::-webkit-details-marker {
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: radial-gradient(circle at 18% 12%, rgba(103, 232, 249, 0.18), transparent 34%),
-    radial-gradient(circle at 84% 16%, rgba(255, 116, 0, 0.18), transparent 30%);
+  background: radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 84% 16%, rgba(241, 135, 33, 0.18), transparent 30%);
   opacity: 0;
   transition: opacity 260ms ease;
 }
@@ -200,8 +201,8 @@ details summary::-webkit-details-marker {
 .lp-animated .lp-card-interactive:hover,
 .lp-animated .lp-card-interactive:focus-within {
   transform: translateY(-8px) scale(1.015);
-  border-color: rgba(103, 232, 249, 0.38);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32), 0 0 44px rgba(103, 232, 249, 0.14);
+  border-color: rgba(241, 135, 33, 0.38);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32), 0 0 44px rgba(241, 135, 33, 0.14);
 }
 
 .lp-animated .lp-card-interactive:hover::before,
@@ -219,7 +220,7 @@ details summary::-webkit-details-marker {
 .lp-animated .lp-card-interactive:hover .lp-icon-pop,
 .lp-animated .lp-card-interactive:focus-within .lp-icon-pop {
   transform: rotate(-5deg) scale(1.1);
-  box-shadow: 0 0 34px rgba(255, 116, 0, 0.32);
+  box-shadow: 0 0 34px rgba(241, 135, 33, 0.32);
 }
 
 .lp-animated .lp-image-tilt {
@@ -273,17 +274,17 @@ details summary::-webkit-details-marker {
 .lp-animated details summary::after {
   content: "+";
   float: right;
-  color: #67e8f9;
+  color: var(--brand-blue);
   font-weight: 900;
   transition: transform 220ms ease, color 220ms ease;
 }
 
 .lp-animated details[open] summary {
-  color: #67e8f9;
+  color: var(--brand-blue);
 }
 
 .lp-animated details[open] summary::after {
-  color: #ff7400;
+  color: var(--brand-orange);
   transform: rotate(45deg);
 }
 
