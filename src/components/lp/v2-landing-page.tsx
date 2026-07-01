@@ -323,8 +323,8 @@ function CustomCursor() {
     let animationFrameId = 0;
 
     function moveCursor() {
-      currentX += (targetX - currentX) * 0.18;
-      currentY += (targetY - currentY) * 0.18;
+      currentX += (targetX - currentX) * 0.45;
+      currentY += (targetY - currentY) * 0.45;
       cursorElement.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
       animationFrameId = window.requestAnimationFrame(moveCursor);
     }
@@ -1011,10 +1011,10 @@ export default function V2LandingPage() {
           }}
           visible={isFloatingHeaderVisible}
         />
-        <section className="relative isolate min-h-screen bg-[#2B3094] px-5 py-6 text-white sm:px-8 lg:px-12">
+        <section className="relative isolate min-h-screen bg-[#2B3094] px-5 pb-6 pt-28 text-white sm:px-8 lg:px-12">
           <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(241,135,33,0.22),transparent_34%),radial-gradient(circle_at_86%_14%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(135deg,#2B3094_0%,#232878_52%,#2B3094_100%)]" />
 
-          <div className="mx-auto mt-12 max-w-7xl">
+          <div className="mx-auto mt-4 max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.76fr_1.24fr] lg:items-stretch">
               <div className="order-1 lg:col-start-1 lg:row-start-1">
                 <p className="text-sm font-black uppercase tracking-[0.26em] text-white/90">{resultCopy.eyebrow}</p>
@@ -1240,11 +1240,11 @@ export default function V2LandingPage() {
         onCtaClick={openConsultationModal}
         visible={isFloatingHeaderVisible}
       />
-      <section className="relative isolate bg-[#2B3094] px-5 pb-0 pt-6 text-white sm:px-8 lg:px-12">
+      <section className="relative isolate bg-[#2B3094] px-5 pb-0 pt-28 text-white sm:px-8 lg:px-12">
         <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(241,135,33,0.22),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,255,255,0.10),transparent_32%),linear-gradient(135deg,#2B3094_0%,#232878_52%,#2B3094_100%)]" />
         <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-white/10 bg-white/5 blur-3xl" />
 
-        <div id="topo" className="scroll-mt-28 mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
+        <div id="topo" className="scroll-mt-28 mx-auto flex max-w-5xl flex-col items-center pt-6 text-center sm:pt-8">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-white/80">
             <span className="lp-pulse-dot size-2 rounded-full bg-[#F18721] shadow-[0_0_18px_#F18721]" />
             Internet Fibra Ótica em São Luís e Região
