@@ -6,7 +6,6 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { benefitPoints, coverageBairros, plans, stats } from "@/components/lp/lp-data";
-import { LpSectionDivider } from "@/components/lp/lp-section-divider";
 import { BairroFeature, saoLuisBairrosGeoJson } from "@/data/sao-luis-bairros";
 
 const BairroMap = dynamic(() => import("@/components/bairro-map"), {
@@ -31,7 +30,7 @@ const steps = [
   ["Informe seu bairro", "Escolha uma das regiões com viabilidade no formulário."],
   ["Digite sua rua", "Com sua rua, conseguimos consultar melhor a disponibilidade."],
   ["O Starzinho te guia", "Depois da consulta, o atendimento segue pelo WhatsApp."],
-  ["A ST1 confirma", "O time verifica se a instalação pode avançar no seu endereço."],
+  ["A ST1 Internet confirma", "O time verifica se a instalação pode avançar no seu endereço."],
   ["Orientação do plano ideal", "O atendimento te ajuda a seguir com a melhor opção."],
   ["Instalação", "Se houver disponibilidade, você recebe os próximos passos para ativação."],
 ];
@@ -43,11 +42,11 @@ const purchaseFaqs = [
   ],
   [
     "Preciso escolher o plano agora?",
-    "Não precisa decidir sozinho. Depois da consulta, o atendimento da ST1 te ajuda a confirmar a melhor opção para sua rotina.",
+    "Não precisa decidir sozinho. Depois da consulta, o atendimento da ST1 Internet te ajuda a confirmar a melhor opção para sua rotina.",
   ],
   [
-    "A ST1 usa fibra óptica?",
-    "Sim. A comunicação da ST1 reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
+    "A ST1 Internet usa fibra óptica?",
+    "Sim. A comunicação da ST1 Internet reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
   ],
   [
     "O atendimento continua por onde?",
@@ -82,7 +81,7 @@ const landingMenuItems = [
   { href: "#topo", label: "Início" },
   { href: "#consulta", label: "Consulta" },
   { href: "#streaming", label: "Streaming" },
-  { href: "#st1", label: "ST1" },
+  { href: "#st1", label: "ST1 Internet" },
   { href: "#duvidas", label: "Dúvidas" },
 ] as const;
 
@@ -453,15 +452,15 @@ export default function V2LandingPage() {
         title: "Planos disponíveis para escolher agora",
         cardTitle: "Endereço em análise",
         cardText: `Um atendente confirma a disponibilidade final pelo WhatsApp ${lead.whatsapp}.`,
-        nextTitle: "Seu endereço já entrou na análise da ST1.",
+        nextTitle: "Seu endereço já entrou na análise da ST1 Internet.",
         nextText: `O atendimento continua pelo WhatsApp ${lead.whatsapp}. O time confirma a disponibilidade final e te ajuda a seguir com o plano ideal para sua casa.`,
       }
     : {
         eyebrow: "Bairro em construção",
         title: "Em breve disponível no seu bairro",
         cardTitle: "Rota em construção",
-        cardText: `A ST1 ainda está construindo a rota em ${lead?.bairro}. Deixamos seu contato para avisar pelo WhatsApp ${lead?.whatsapp} quando houver disponibilidade.`,
-        nextTitle: "A ST1 ainda está chegando ao seu bairro.",
+        cardText: `A ST1 Internet ainda está construindo a rota em ${lead?.bairro}. Deixamos seu contato para avisar pelo WhatsApp ${lead?.whatsapp} quando houver disponibilidade.`,
+        nextTitle: "A ST1 Internet ainda está chegando ao seu bairro.",
         nextText:
           "Enquanto a cobertura é construída, você já pode conhecer os planos residenciais. Assim que a rota estiver disponível, o atendimento avança com a confirmação do endereço.",
       };
@@ -989,7 +988,7 @@ export default function V2LandingPage() {
         <CustomCursor />
         <section className="w-full max-w-3xl rounded-[2.5rem] border border-white/15 bg-[#232878] p-8 text-center shadow-2xl">
           <div className="mx-auto size-16 animate-spin rounded-full border-4 border-white/20 border-t-white" />
-          <h1 className="mt-6 text-3xl font-black tracking-[-0.05em] text-white">Consultando rota da ST1...</h1>
+          <h1 className="mt-6 text-3xl font-black tracking-[-0.05em] text-white">Consultando rota da ST1 Internet...</h1>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-300">
             Estamos verificando o bairro, a rua e preparando os planos residenciais para sua consulta.
           </p>
@@ -1242,9 +1241,8 @@ export default function V2LandingPage() {
         visible={isFloatingHeaderVisible}
       />
       <section className="relative isolate bg-[#2B3094] px-5 pb-0 pt-6 text-white sm:px-8 lg:px-12">
-        <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(241,135,33,0.22),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,255,255,0.10),transparent_32%),linear-gradient(135deg,#2B3094_0%,#232878_52%,#2B3094_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)]" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72 bg-gradient-to-b from-transparent via-[#2B3094]/70 to-white" />
-        <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-white/10 bg-white/5 blur-3xl [mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,transparent_78%)]" />
+        <div className="lp-gradient-shift absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(241,135,33,0.22),transparent_34%),radial-gradient(circle_at_86%_20%,rgba(255,255,255,0.10),transparent_32%),linear-gradient(135deg,#2B3094_0%,#232878_52%,#2B3094_100%)]" />
+        <div className="absolute left-1/2 top-28 -z-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-white/10 bg-white/5 blur-3xl" />
 
         <div id="topo" className="scroll-mt-28 mx-auto flex max-w-5xl flex-col items-center pt-14 text-center lg:pt-24">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-white/80">
@@ -1253,14 +1251,14 @@ export default function V2LandingPage() {
           </div>
 
           <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
-            Tem uma rota de internet fibra bem perto de você.
+            Internet fibra perto de você.
             <span className="lp-hero-wordmark block bg-gradient-to-r from-white via-white to-[#F18721] bg-clip-text text-transparent">
-              Descubra se ela chega até a sua rua.
+              Consulte se chega na sua rua.
             </span>
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-            O Starzinho cruza bairro, rua e rota de cobertura para iniciar a consulta da ST1 antes do atendimento seguir
+            O Starzinho cruza bairro, rua e rota de cobertura para iniciar a consulta da ST1 Internet antes do atendimento seguir
             pelo WhatsApp.
           </p>
         </div>
@@ -1280,14 +1278,14 @@ export default function V2LandingPage() {
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2B3094]">Starzinho</p>
             <p className="mt-1 text-base font-semibold leading-7 sm:text-lg">
               Eu já vi sinais de rota na região. Agora preciso do seu bairro e da sua rua para consultar se a fibra da
-              ST1 pode chegar no seu endereço e quais opções fazem sentido para sua casa.
+              ST1 Internet pode chegar no seu endereço e quais opções fazem sentido para sua casa.
             </p>
           </div>
         </div>
 
         <div id="consulta" ref={consultationFormRef} className="scroll-mt-28 mx-auto mt-8 max-w-5xl">
-          <div className="lp-motion-card overflow-visible rounded-[2rem] border border-white/15 bg-[#232878]/95 shadow-[0_24px_90px_rgba(0,0,0,0.35)] backdrop-blur">
-            <div className="border-b border-white/10 bg-white/10 p-4 sm:p-5">
+          <div className="lp-motion-card overflow-hidden rounded-[2rem] border border-white/15 bg-[#232878]/95 shadow-[0_24px_90px_rgba(0,0,0,0.35)] backdrop-blur">
+            <div className="rounded-t-[2rem] border-b border-white/10 bg-white/10 p-4 sm:p-5">
               {renderBairroPicker("bairro-picker-main")}
             </div>
 
@@ -1295,7 +1293,7 @@ export default function V2LandingPage() {
           </div>
         </div>
 
-        <LpSectionDivider className="mt-10" />
+        <div className="mt-10 h-px w-full bg-white" aria-hidden="true" />
       </section>
 
       <section className="relative bg-white px-5 py-20 text-[#2B3094] sm:px-8 lg:px-12">
@@ -1339,7 +1337,7 @@ export default function V2LandingPage() {
                 <span className="mt-2 block text-[#F18721]">Sem travar.</span>
               </h2>
               <p className="mt-6 max-w-lg text-lg leading-8 text-slate-300">
-                De séries e filmes ao BBB ao vivo e aos jogos da Copa do Mundo, a fibra da ST1 aguenta maratona,
+                De séries e filmes ao BBB ao vivo e aos jogos da Copa do Mundo, a fibra da ST1 Internet aguenta maratona,
                 vários aparelhos conectados e imagem em alta definição sem depender da sorte.
               </p>
 
@@ -1433,7 +1431,7 @@ export default function V2LandingPage() {
                     ✓
                   </span>
                   <div>
-                    <p className="text-sm font-black text-[#2B3094]">Compromisso ST1</p>
+                    <p className="text-sm font-black text-[#2B3094]">Compromisso ST1 Internet</p>
                     <p className="mt-1 text-xs font-semibold text-slate-500">Qualidade em cada conexão.</p>
                   </div>
                 </div>
@@ -1461,7 +1459,7 @@ export default function V2LandingPage() {
                 todos os dias.
               </p>
               <p>
-                Atendemos São Luís e diversas cidades do Maranhão com um padrão de qualidade que coloca a ST1 entre os
+                Atendemos São Luís e diversas cidades do Maranhão com um padrão de qualidade que coloca a ST1 Internet entre os
                 provedores mais confiáveis da região.
               </p>
             </div>
@@ -1542,7 +1540,7 @@ export default function V2LandingPage() {
             Como funciona a consulta com o Starzinho
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Em poucos passos, você descobre se a ST1 já pode chegar até sua rua.
+            Em poucos passos, você descobre se a ST1 Internet já pode chegar até sua rua.
           </p>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {steps.map(([title, text], index) => (
@@ -1568,7 +1566,7 @@ export default function V2LandingPage() {
             Quer saber se essa rota chega até sua rua?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-            Informe seu bairro e sua rua para consultar a disponibilidade da ST1 pelo WhatsApp.
+            Informe seu bairro e sua rua para consultar a disponibilidade da ST1 Internet pelo WhatsApp.
           </p>
           <button
             type="button"
@@ -1587,8 +1585,8 @@ export default function V2LandingPage() {
             aria-hidden="true"
             onClick={() => setIsModalOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-5xl overflow-visible rounded-[2rem] border border-white/15 bg-[#2B3094]/98 shadow-[0_24px_90px_rgba(43,48,148,0.45)]">
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-6">
+          <div className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/15 bg-[#2B3094]/98 shadow-[0_24px_90px_rgba(43,48,148,0.45)]">
+            <div className="flex items-center justify-between rounded-t-[2rem] border-b border-white/10 px-5 py-4 sm:px-6">
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.18em] text-white/80">Consulta de cobertura</p>
                 <p className="mt-1 text-lg font-black text-white">Preencha seus dados para verificar a disponibilidade</p>

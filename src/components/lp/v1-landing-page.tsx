@@ -46,7 +46,7 @@ const steps = [
   ["Informe seu bairro", "Escolha uma das regiões com viabilidade no formulário."],
   ["Digite sua rua", "Com sua rua, conseguimos consultar melhor a disponibilidade."],
   ["O Starzinho te guia", "Depois da consulta, o atendimento segue pelo WhatsApp."],
-  ["A ST1 confirma", "O time verifica se a instalação pode avançar no seu endereço."],
+  ["A ST1 Internet confirma", "O time verifica se a instalação pode avançar no seu endereço."],
   ["Orientação do plano ideal", "O atendimento te ajuda a seguir com a melhor opção."],
   ["Instalação", "Se houver disponibilidade, você recebe os próximos passos para ativação."],
 ];
@@ -60,7 +60,7 @@ const stats = [
 
 const faqs = [
   [
-    "A ST1 atende qualquer rua do bairro?",
+    "A ST1 Internet atende qualquer rua do bairro?",
     "Não necessariamente. A disponibilidade pode variar por rua e endereço. Por isso, pedimos bairro e rua para consultar a viabilidade antes do próximo passo.",
   ],
   [
@@ -69,15 +69,15 @@ const faqs = [
   ],
   [
     "Preciso escolher o plano agora?",
-    "Não. Primeiro, você consulta se a ST1 chega até sua rua. Depois, o atendimento te ajuda a entender se o plano de 1000MB ou 1300MB combina melhor com sua rotina.",
+    "Não. Primeiro, você consulta se a ST1 Internet chega até sua rua. Depois, o atendimento te ajuda a entender se o plano de 1000MB ou 1300MB combina melhor com sua rotina.",
   ],
   [
     "Quais planos residenciais estão disponíveis?",
     "A LP apresenta duas opções residenciais: 1000MB por R$ 89,90/mês e 1300MB por R$ 109,90/mês. A disponibilidade deve ser confirmada conforme a região.",
   ],
   [
-    "A ST1 usa fibra óptica?",
-    "Sim. A comunicação da ST1 reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
+    "A ST1 Internet usa fibra óptica?",
+    "Sim. A comunicação da ST1 Internet reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
   ],
   ["O atendimento continua por onde?", "Depois do envio dos dados, o atendimento segue pelo WhatsApp."],
   ["O formulário tem custo ou compromisso?", "Não. O formulário serve para iniciar a consulta de disponibilidade."],
@@ -117,7 +117,7 @@ export default function V1LandingPage() {
               Rota de internet fibra com o Starzinho
             </div>
             <h1 className="max-w-4xl text-4xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:text-6xl lg:text-7xl">
-              Descubra se a fibra da ST1
+              Descubra se a fibra da ST1 Internet
               <span className="block bg-gradient-to-r from-cyan-200 via-white to-[#ff7400] bg-clip-text text-transparent">
                 chega na sua rua.
               </span>
@@ -136,7 +136,7 @@ export default function V1LandingPage() {
               <div className="relative flex-1 rounded-2xl border border-white/15 bg-white px-5 py-4 text-[#07111f] shadow-[0_18px_45px_rgba(0,0,0,0.25)] before:absolute before:left-[-8px] before:top-6 before:size-4 before:rotate-45 before:border-b before:border-l before:border-white/15 before:bg-white">
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-[#072f78]">Starzinho</p>
                 <p className="mt-1 text-base font-semibold leading-7 sm:text-lg">
-                  Informe seu bairro e sua rua para consultar a disponibilidade da ST1 e ver as ofertas disponíveis para
+                  Informe seu bairro e sua rua para consultar a disponibilidade da ST1 Internet e ver as ofertas disponíveis para
                   o seu endereço.
                 </p>
               </div>
@@ -163,7 +163,7 @@ export default function V1LandingPage() {
                 <div className="absolute right-[18%] top-[62%] size-3 rounded-full bg-[#ff7400] shadow-[0_0_28px_#ff7400]" />
                 <Image
                   src="/startzinho2.png"
-                  alt="Starzinho, mascote da ST1, guiando a consulta de cobertura"
+                  alt="Starzinho, mascote da ST1 Internet, guiando a consulta de cobertura"
                   width={257}
                   height={300}
                   priority
@@ -173,7 +173,7 @@ export default function V1LandingPage() {
 
               <form className="space-y-4 rounded-[2rem] border border-white/10 bg-white/[0.06] p-5" action="/mapa" method="get">
                 <div>
-                  <p className="text-2xl font-black tracking-[-0.04em] text-white">Consulte se a ST1 chega na sua rua</p>
+                  <p className="text-2xl font-black tracking-[-0.04em] text-white">Consulte se a ST1 Internet chega na sua rua</p>
                   <p className="mt-2 text-sm leading-6 text-slate-300">
                     Preencha os dados abaixo para o Starzinho iniciar a verificacao de cobertura.
                   </p>
@@ -255,7 +255,7 @@ export default function V1LandingPage() {
             ))}
           </div>
           <a href="#consulta" className="mt-8 inline-flex rounded-full bg-cyan-300 px-6 py-3 font-black text-[#04101f] shadow-[0_0_32px_rgba(103,232,249,0.26)] transition hover:-translate-y-0.5">
-            Verificar se a ST1 chega na minha rua
+            Verificar se a ST1 Internet chega na minha rua
           </a>
         </div>
       </section>
@@ -305,7 +305,7 @@ export default function V1LandingPage() {
             Como funciona a consulta com o Starzinho
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Em poucos passos, você descobre se a ST1 já pode chegar até sua rua.
+            Em poucos passos, você descobre se a ST1 Internet já pode chegar até sua rua.
           </p>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {steps.map(([title, text], index) => (
@@ -327,9 +327,9 @@ export default function V1LandingPage() {
       <section className="px-5 py-20 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-          <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">ST1 no Maranhão</p>
+          <p className="text-sm font-black uppercase tracking-[0.26em] text-cyan-200">ST1 Internet no Maranhão</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-              A ST1 já conecta milhares de pessoas no Maranhão
+              A ST1 Internet já conecta milhares de pessoas no Maranhão
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-300">
               Uma rede em expansão, feita para entregar mais velocidade e estabilidade para a rotina dos clientes.
@@ -369,7 +369,7 @@ export default function V1LandingPage() {
             Quer saber se essa rota chega até sua rua?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Informe seu bairro e sua rua para consultar a disponibilidade da ST1 pelo WhatsApp.
+            Informe seu bairro e sua rua para consultar a disponibilidade da ST1 Internet pelo WhatsApp.
           </p>
           <a href="#consulta" className="mt-8 inline-flex rounded-full bg-[#ff7400] px-8 py-4 font-black text-[#07111f] transition hover:-translate-y-0.5">
             Verificar minha rua

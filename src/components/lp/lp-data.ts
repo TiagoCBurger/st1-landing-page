@@ -44,7 +44,7 @@ export const steps = [
   ["Informe seu bairro", "Escolha uma das regiões com viabilidade no formulário."],
   ["Digite sua rua", "Com sua rua, conseguimos consultar melhor a disponibilidade."],
   ["O Starzinho te guia", "Depois da consulta, o atendimento segue pelo WhatsApp."],
-  ["A ST1 confirma", "O time verifica se a instalação pode avançar no seu endereço."],
+  ["A ST1 Internet confirma", "O time verifica se a instalação pode avançar no seu endereço."],
   ["Orientação do plano ideal", "O atendimento te ajuda a seguir com a melhor opção."],
   ["Instalação", "Se houver disponibilidade, você recebe os próximos passos para ativação."],
 ];
@@ -58,7 +58,7 @@ export const stats = [
 
 export const faqs = [
   [
-    "A ST1 atende qualquer rua do bairro?",
+    "A ST1 Internet atende qualquer rua do bairro?",
     "Não necessariamente. A disponibilidade pode variar por rua e endereço. Por isso, pedimos bairro e rua para consultar a viabilidade antes do próximo passo.",
   ],
   [
@@ -67,15 +67,15 @@ export const faqs = [
   ],
   [
     "Preciso escolher o plano agora?",
-    "Não. Primeiro, você consulta se a ST1 chega até sua rua. Depois, o atendimento te ajuda a entender se o plano de 1000MB ou 1300MB combina melhor com sua rotina.",
+    "Não. Primeiro, você consulta se a ST1 Internet chega até sua rua. Depois, o atendimento te ajuda a entender se o plano de 1000MB ou 1300MB combina melhor com sua rotina.",
   ],
   [
     "Quais planos residenciais estão disponíveis?",
     "A LP apresenta duas opções residenciais: 1000MB por R$ 89,90/mês e 1300MB por R$ 109,90/mês. A disponibilidade deve ser confirmada conforme a região.",
   ],
   [
-    "A ST1 usa fibra óptica?",
-    "Sim. A comunicação da ST1 reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
+    "A ST1 Internet usa fibra óptica?",
+    "Sim. A comunicação da ST1 Internet reforça internet fibra com foco em velocidade, estabilidade e desempenho para a rotina residencial.",
   ],
   ["O atendimento continua por onde?", "Depois do envio dos dados, o atendimento segue pelo WhatsApp."],
   ["O formulário tem custo ou compromisso?", "Não. O formulário serve para iniciar a consulta de disponibilidade."],

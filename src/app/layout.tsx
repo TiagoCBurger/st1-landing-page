@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ST1 Internet Fibra | Consulte cobertura com o Starzinho",
   description:
-    "Consulte se a rota de internet fibra da ST1 chega na sua rua e conheca planos residenciais de 1000MB e 1300MB.",
+    "Consulte se a rota de internet fibra da ST1 Internet chega na sua rua e conheca planos residenciais de 1000MB e 1300MB.",
 };
 
 const GTM_ID = "GTM-KZD7GHCT";

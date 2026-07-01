@@ -146,7 +146,7 @@ export default function LpConsultaForm({
         </div>
         <div>
           <p className="text-sm font-black text-white">Starzinho</p>
-          <p className="text-xs text-cyan-100/80">guia de cobertura ST1</p>
+          <p className="text-xs text-cyan-100/80">guia de cobertura ST1 Internet</p>
         </div>
       </div>
 
